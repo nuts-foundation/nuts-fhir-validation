@@ -3,10 +3,12 @@
 Rules
 =====
 
-This page lists the rules for the fhir consent model
+This page lists the rules for the fhir consent model.
 
 Minimal rules
 -------------
+
+The list of rules below will only give a valid json record. It will not be a valid Nuts consent record (yet)!
 
 - The :code:`resourceType` is equal to **Consent**
 - :code:`scope.coding` has an entry with :code:`system` equal to **http://terminology.hl7.org/CodeSystem/consentscope** and :code:`code` equal to **patient-privacy**
@@ -35,3 +37,8 @@ Minimal rules
         }
       ]
     }
+
+Additional rules
+----------------
+
+More soon!
