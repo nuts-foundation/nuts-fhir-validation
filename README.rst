@@ -50,6 +50,14 @@ Usage
 
 .. code-block:: go
 
-   engine, err := validation.NewConsentValidationEngine()
+   engine, err := validation.NewValidationEngine()
+
+Cmd
+---
+
+.. code-block:: shell
+
+   go run main.go consent examples/empty_consent.json --logtostderr
+   go run main.go consent examples/hl7.org/consent-example.json --logtostderr
 
 

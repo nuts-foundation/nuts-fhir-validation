@@ -1,4 +1,4 @@
-.. _nuts-crypto-howto:
+.. _nuts-fhir-validation-howto:
 
 Howto
 =====
@@ -27,7 +27,7 @@ Then run
 
 .. code-block:: shell
 
-   schema-generate schema/fhir.schema.json > types.go
+   schema-generate schema/fhir.schema.json > pkg/types.go
 
 The generated go file is quite large, most IDE's do not really like it.
 
