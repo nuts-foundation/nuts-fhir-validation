@@ -84,6 +84,10 @@ If a valid identifier is not present, :code:`display` must be present in the ref
 
 .. note::
 
+    An extra check has to be added to determine that the performer works for/is the organization when a poor proof like pdf is given.
+
+.. note::
+
     In the case of verbal consent, the profile needs to be extended to identify that type of proof.
     When verbal consent has been given, a valid login contract must be present identifying the user.
 
@@ -242,16 +246,17 @@ Nuts will also direct how a general consent category like *medical* can be trans
 
    {
      "resourceType": "Consent",
-     "actor": [
-        {
+
+     "provision": {
+       "actor": [
+         {
             "identifier": {
                 "system": "https://nuts.nl/identifiers/agb",
                 "value": "00000007"
             },
             "display": "P. Practitioner"
-        }
-     ],
-     "provision": {
+         }
+        ],
         "period": {
           "start": "2016-06-23T17:02:33+10:00",
           "end": "2016-06-23T17:32:33+10:00"
@@ -277,9 +282,119 @@ Nuts will also direct how a general consent category like *medical* can be trans
             ]
           }
         ]
+      }
    }
 
+Complete example
+----------------
 
+The example below grants access to observations for Practitioner with agb=00000007 from patient with bsn=999999990 from organization with agb=00000000
+
+.. code-block:: json
+
+    {
+      "resourceType": "Consent",
+      "scope": {
+        "coding": [
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/consentscope",
+            "code": "patient-privacy"
+          }
+        ]
+      },
+      "category": [
+        {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "64292-6"
+            }
+          ]
+        }
+      ],
+      "patient": {
+        "identifier": {
+            "system": "https://nuts.nl/identifiers/bsn",
+            "value": "999999990"
+        },
+        "display": "P. Patient"
+      },
+      "performer": {
+        "type": "Organization"
+        "identifier": {
+            "system": "https://nuts.nl/identifiers/agb",
+            "value": "00000000"
+        },
+        "display": "P. Practitioner"
+      },
+      "organization": {
+        "identifier": {
+            "system": "https://nuts.nl/identifiers/agb",
+            "value": "00000000"
+        },
+        "display": "P. Practise"
+      },
+      "source": {
+        "contentType": "application/pdf",
+        "data": "dhklauHAELrlg78OLg==",
+        "title": "Toestemming delen gegevens met Huisarts"
+      },
+      "verification": {
+        "verified": "true",
+        "verifiedWith": {
+            "type": "Patient",
+            "identifier": {
+                "system": "https://nuts.nl/identifiers/bsn",
+                "value": "999999990"
+            },
+            "display": "P. Patient"
+        }
+      },
+      "policyRule": {
+        "coding": [
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+            "code": "OPTIN"
+          }
+        ]
+      },
+      "provision": {
+       "actor": [
+         {
+            "identifier": {
+                "system": "https://nuts.nl/identifiers/agb",
+                "value": "00000007"
+            },
+            "display": "P. Practitioner"
+         }
+        ],
+        "period": {
+          "start": "2016-06-23T17:02:33+10:00",
+          "end": "2016-06-23T17:32:33+10:00"
+        },
+        "provision": [
+          {
+            "type": "permit",
+            "action": [
+              {
+                "coding": [
+                  {
+                    "system": "http://terminology.hl7.org/CodeSystem/consentaction",
+                    "code": "access"
+                  }
+                ]
+              }
+            ],
+            "class": [
+              {
+                "system": "http://hl7.org/fhir/resource-types",
+                "code": "Observation"
+              }
+            ]
+          }
+        ]
+      }
+    }
 
 
 
