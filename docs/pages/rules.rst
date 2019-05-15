@@ -96,7 +96,7 @@ If a valid identifier is not present, :code:`display` must be present in the ref
     {
       "resourceType": "Consent",
       "performer": {
-        "type": "Practitioner"
+        "type": "Practitioner",
         "identifier": {
             "system": "https://nuts.nl/identifiers/agb",
             "value": "00000007"
@@ -110,7 +110,7 @@ If a valid identifier is not present, :code:`display` must be present in the ref
     {
       "resourceType": "Consent",
       "performer": [{
-        "type": "Organization"
+        "type": "Organization",
         "identifier": {
             "system": "https://nuts.nl/identifiers/agb",
             "value": "00000000"
