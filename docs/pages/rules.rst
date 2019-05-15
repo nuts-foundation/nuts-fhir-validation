@@ -109,14 +109,14 @@ If a valid identifier is not present, :code:`display` must be present in the ref
 
     {
       "resourceType": "Consent",
-      "performer": {
+      "performer": [{
         "type": "Organization"
         "identifier": {
             "system": "https://nuts.nl/identifiers/agb",
             "value": "00000000"
         },
         "display": "P. Practitioner"
-      }
+      }]
     }
 
 Organization
@@ -127,13 +127,13 @@ Organization
 
     {
       "resourceType": "Consent",
-      "organization": {
+      "organization": [{
         "identifier": {
             "system": "https://nuts.nl/identifiers/agb",
             "value": "00000000"
         },
         "display": "P. Practise"
-      }
+      }]
     }
 
 Source
@@ -153,7 +153,7 @@ The title should reflect the type of consent given.
 
     {
       "resourceType": "Consent",
-      "source": {
+      "sourceAttachment": {
         "contentType": "application/pdf",
         "data": "dhklauHAELrlg78OLg==",
         "title": "Toestemming delen gegevens met Huisarts"
@@ -164,7 +164,7 @@ The title should reflect the type of consent given.
 
     {
       "resourceType": "Consent",
-      "source": {
+      "sourceAttachment": {
         "contentType": "application/json+irma",
         "data": "dhklauHAELrlg78O...Lg==",
         "title": "Toestemming delen gegevens besproken met P. Practitioner"
@@ -182,8 +182,8 @@ In case of a relative, only the :code:`display` field will be required.
 
     {
       "resourceType": "Consent",
-      "verification": {
-        "verified": "true",
+      "verification": [{
+        "verified": true,
         "verifiedWith": {
             "type": "Patient",
             "identifier": {
@@ -192,7 +192,7 @@ In case of a relative, only the :code:`display` field will be required.
             },
             "display": "P. Patient"
         }
-      }
+      }]
     }
 
 PolicyRule
@@ -233,7 +233,7 @@ Provision
 
 :code:`provision` holds the actual extend of the consent. It must at least have 1 :code:`actor`. For now this must identify the **Practitioner**.
 When the Nuts registry holds actual organization-practitioner relationships or when mandating becomes active, this can change to **Organization**.
-If multiple practitioners work at the the same organization, all practitioners are added as actor.
+If multiple practitioners work at the the same organization, all practitioners are added as actor. The :code:`role` will always be **PRCP**.
 
 :code:`period` is required and has an optional :code:`end`. :code:`dataPeriod` is optional, when given it will restrict the data period for which data can be retrieved.
 
@@ -249,14 +249,23 @@ Nuts will also direct how a general consent category like *medical* can be trans
 
      "provision": {
        "actor": [
-         {
-            "identifier": {
+          {
+            "role":{
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+                  "code": "PRCP"
+                }
+              ]
+            },
+            "reference": {
+              "identifier": {
                 "system": "https://nuts.nl/identifiers/agb",
                 "value": "00000007"
-            },
-            "display": "P. Practitioner"
-         }
-        ],
+              },
+              "display": "P. Practitioner"
+            }
+          }],
         "period": {
           "start": "2016-06-23T17:02:33+10:00",
           "end": "2016-06-23T17:32:33+10:00"
@@ -319,28 +328,28 @@ The example below grants access to observations for Practitioner with agb=000000
         },
         "display": "P. Patient"
       },
-      "performer": {
-        "type": "Organization"
+      "performer": [{
+        "type": "Organization",
         "identifier": {
             "system": "https://nuts.nl/identifiers/agb",
             "value": "00000000"
         },
         "display": "P. Practitioner"
-      },
-      "organization": {
+      }],
+      "organization": [{
         "identifier": {
             "system": "https://nuts.nl/identifiers/agb",
             "value": "00000000"
         },
         "display": "P. Practise"
-      },
-      "source": {
+      }],
+      "sourceAttachment": {
         "contentType": "application/pdf",
         "data": "dhklauHAELrlg78OLg==",
         "title": "Toestemming delen gegevens met Huisarts"
       },
-      "verification": {
-        "verified": "true",
+      "verification": [{
+        "verified": true,
         "verifiedWith": {
             "type": "Patient",
             "identifier": {
@@ -349,7 +358,7 @@ The example below grants access to observations for Practitioner with agb=000000
             },
             "display": "P. Patient"
         }
-      },
+      }],
       "policyRule": {
         "coding": [
           {
@@ -360,14 +369,23 @@ The example below grants access to observations for Practitioner with agb=000000
       },
       "provision": {
        "actor": [
-         {
-            "identifier": {
+          {
+            "role":{
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+                  "code": "PRCP"
+                }
+              ]
+            },
+            "reference": {
+              "identifier": {
                 "system": "https://nuts.nl/identifiers/agb",
                 "value": "00000007"
-            },
-            "display": "P. Practitioner"
-         }
-        ],
+              },
+              "display": "P. Practitioner"
+            }
+          }],
         "period": {
           "start": "2016-06-23T17:02:33+10:00",
           "end": "2016-06-23T17:32:33+10:00"
