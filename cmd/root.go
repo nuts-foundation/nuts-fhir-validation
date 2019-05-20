@@ -40,4 +40,3 @@ func Execute() {
 
 	rootCmd.Execute()
 }
-

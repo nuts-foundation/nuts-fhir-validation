@@ -19,7 +19,6 @@
  *
  */
 
-
 package main
 
 import "github.com/nuts-foundation/nuts-fhir-validation/cmd"
