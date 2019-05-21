@@ -50,7 +50,7 @@ Usage
 
 .. code-block:: go
 
-   engine, err := validation.NewValidationEngine()
+   client := validation.NewValidationClient()
 
 Cmd
 ---
