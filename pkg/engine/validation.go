@@ -25,15 +25,13 @@ import (
 	"fmt"
 	"github.com/deepmap/oapi-codegen/pkg/runtime"
 	"github.com/golang/glog"
-	"github.com/labstack/echo/v4"
 	"github.com/nuts-foundation/nuts-fhir-validation/pkg/generated"
+	"github.com/nuts-foundation/nuts-go/pkg"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 	"github.com/xeipuuv/gojsonschema"
 	"gopkg.in/thedevsaddam/gojsonq.v2"
-	"io/ioutil"
-	"net/http"
 )
 
 // --schemapath config flag
@@ -42,26 +40,25 @@ const ConfigSchemaPath = "schemapath"
 // Default schemapath at './schema/fhir.schema.json'
 const ConfigSchemaPathDefault = "./schema/fhir.schema.json"
 
-type ValidationEngine struct {
+type ValidationEngine interface {
+	ValidationClient
+	pkg.Engine
+}
+
+type DefaultValidationEngine struct {
 	schemaLoader gojsonschema.JSONLoader
 }
 
-// NewValidationEngine creates a new instance of the ValidationEngine
-func NewValidationEngine() *ValidationEngine {
-	return &ValidationEngine{}
+// NewValidationEngine creates a new instance of the DefaultValidationEngine
+func NewValidationEngine() *DefaultValidationEngine {
+	return &DefaultValidationEngine{}
 }
 
 // Cmd gives the validate sub-command for validating json consent records
-func (ve *ValidationEngine) Cmd() *cobra.Command {
+func (ve *DefaultValidationEngine) Cmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "validate",
 		Short: "validation commands",
-		Run: func(cmd *cobra.Command, args []string) {
-			echo := echo.New()
-			ve.Routes(echo)
-
-			glog.Fatal(echo.Start("localhost:5678"))
-		},
 	}
 
 	cmd.AddCommand(&cobra.Command{
@@ -122,7 +119,7 @@ func (ve *ValidationEngine) Cmd() *cobra.Command {
 }
 
 // Configure loads the given configurations in the engine.
-func (ve *ValidationEngine) Configure() error {
+func (ve *DefaultValidationEngine) Configure() error {
 	schemaPath := ConfigSchemaPathDefault
 
 	if viper.IsSet(ConfigSchemaPath) {
@@ -139,7 +136,7 @@ func (ve *ValidationEngine) Configure() error {
 }
 
 // FlasSet returns all global configuration possibilities so they can be displayed through the help command
-func (ve *ValidationEngine) FlagSet() *pflag.FlagSet {
+func (ve *DefaultValidationEngine) FlagSet() *pflag.FlagSet {
 	flags := pflag.NewFlagSet("validate", pflag.ContinueOnError)
 
 	flags.String(ConfigSchemaPath, ConfigSchemaPathDefault, "location of json schema, default './schema/fhir.schema.json'")
@@ -148,74 +145,18 @@ func (ve *ValidationEngine) FlagSet() *pflag.FlagSet {
 }
 
 // Routes passes the Echo router to the specific engine for it to register their routes.
-func (ve *ValidationEngine) Routes(router runtime.EchoRouter) {
+func (ve *DefaultValidationEngine) Routes(router runtime.EchoRouter) {
 	generated.RegisterHandlers(router, ve)
 }
 
 // Shutdown the engine
-func (ve *ValidationEngine) Shutdown() error {
+func (ve *DefaultValidationEngine) Shutdown() error {
 	return nil
 }
 
 // Start the engine, this will spawn any clients, background tasks or active processes.
-func (ve *ValidationEngine) Start() error {
+func (ve *DefaultValidationEngine) Start() error {
 	return nil
-}
-
-func (ve *ValidationEngine) Validate(ctx echo.Context) error {
-	buf, err := ioutil.ReadAll(ctx.Request().Body)
-	if err != nil {
-		glog.Error(err.Error())
-		return err
-	}
-
-	valid, errors, err := ve.ValidateAgainstSchema(buf)
-
-	if err != nil {
-		glog.Error(err.Error())
-		return ctx.JSON(http.StatusOK, generated.ValidationResponse{
-			Outcome: "invalid",
-			ValidationErrors: []generated.ValidationError{
-				{
-					Type:    "syntax",
-					Message: err.Error(),
-				},
-			},
-		})
-	}
-
-	if !valid {
-		var validationErrors []generated.ValidationError
-
-		for _, e := range errors {
-			validationErrors = append(validationErrors, generated.ValidationError{Message: e, Type: "constraint"})
-		}
-
-		return ctx.JSON(http.StatusOK, generated.ValidationResponse{
-			Outcome: "invalid",
-			ValidationErrors: validationErrors,
-		})
-	}
-
-	simplifiedConsent, err := extractSimplifiedConsent(buf)
-	if err != nil {
-		glog.Error(err.Error())
-		return ctx.JSON(http.StatusOK, generated.ValidationResponse{
-			Outcome: "invalid",
-			ValidationErrors: []generated.ValidationError{
-				{
-					Type:    "syntax",
-					Message: err.Error(),
-				},
-			},
-		})
-	}
-
-	return ctx.JSON(http.StatusOK, generated.ValidationResponse{
-		Outcome: "valid",
-		Consent: simplifiedConsent,
-	})
-
 }
 
 func extractSimplifiedConsent(bytes []byte) (*generated.SimplifiedConsent, error) {
@@ -283,20 +224,20 @@ func jsonqFromString(source string) *gojsonq.JSONQ {
 }
 
 // Validate the consent record at the given location (on disk)
-func (ve *ValidationEngine) ValidateAgainstSchemaConsentAt(source string) (bool, []string, error) {
+func (ve *DefaultValidationEngine) ValidateAgainstSchemaConsentAt(source string) (bool, []string, error) {
 	documentLoader := gojsonschema.NewReferenceLoader(fmt.Sprintf("file://%s", source))
 
 	return ve.validateAgainstSchema(documentLoader)
 }
 
 // Validate the consent record against the schema
-func (ve *ValidationEngine) ValidateAgainstSchema(json []byte) (bool, []string, error) {
+func (ve *DefaultValidationEngine) ValidateAgainstSchema(json []byte) (bool, []string, error) {
 	documentLoader := gojsonschema.NewBytesLoader(json)
 
 	return ve.validateAgainstSchema(documentLoader)
 }
 
-func (ve *ValidationEngine) validateAgainstSchema(loader gojsonschema.JSONLoader) (bool, []string, error) {
+func (ve *DefaultValidationEngine) validateAgainstSchema(loader gojsonschema.JSONLoader) (bool, []string, error) {
 	result, err := gojsonschema.Validate(ve.schemaLoader, loader)
 	if err != nil {
 		glog.Error(fmt.Sprintf("The document failed to validate : %s", err.Error()))
