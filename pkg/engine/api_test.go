@@ -32,9 +32,9 @@ import (
 )
 
 func TestDefaultValidationEngine_Validate(t *testing.T) {
-	t.Run("Empty json returns 200 with error body", func(t *testing.T) {
-		client := createTempEngine()
+	client := createTempEngine()
 
+	t.Run("Empty json returns 200 with error body", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 		echo := mock.NewMockContext(ctrl)
@@ -47,6 +47,27 @@ func TestDefaultValidationEngine_Validate(t *testing.T) {
 
 		echo.EXPECT().Request().Return(request)
 		echo.EXPECT().JSON(http.StatusOK, gomock.Eq(emptyValidationError()))
+
+		err = client.Validate(echo)
+
+		if err != nil {
+			t.Errorf("Expected no error got [%s]", err.Error())
+		}
+	})
+
+	t.Run("Valid json returns 200 with extracted body", func(t *testing.T) {
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+		echo := mock.NewMockContext(ctrl)
+
+		json, err := ioutil.ReadFile("../../examples/observation_consent.json")
+
+		request := &http.Request{
+			Body: ioutil.NopCloser(bytes.NewReader(json)),
+		}
+
+		echo.EXPECT().Request().Return(request)
+		echo.EXPECT().JSON(http.StatusOK, gomock.Eq(validationResult()))
 
 		err = client.Validate(echo)
 
@@ -69,5 +90,17 @@ func emptyValidationError() generated.ValidationResponse {
 				Message: "(root): resourceType is required",
 			},
 		},
+	}
+}
+
+func validationResult() generated.ValidationResponse {
+	return generated.ValidationResponse{
+		Consent: &generated.SimplifiedConsent{
+			Actors: []generated.ActorURI{"https://nuts.nl/identifiers/agb#00000007"},
+			Custodian: generated.CustodianyURI("https://nuts.nl/identifiers/agb#00000000"),
+			Resources: []string{"Observation"},
+			Subject: generated.SubjectURI("https://nuts.nl/identifiers/bsn#999999990"),
+		},
+		Outcome: "valid",
 	}
 }
