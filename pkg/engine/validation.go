@@ -164,7 +164,7 @@ func extractSimplifiedConsent(bytes []byte) (*generated.SimplifiedConsent, error
 
 	return &generated.SimplifiedConsent{
 		Subject: generated.SubjectURI(SubjectFrom(jsonqFromString)),
-		Custodian: generated.CustodianyURI(CustodianFrom(jsonqFromString)),
+		Custodian: generated.CustodianURI(CustodianFrom(jsonqFromString)),
 		Actors: ActorsFrom(jsonqFromString),
 		Resources:ResourcesFrom(jsonqFromString),
 	}, nil
