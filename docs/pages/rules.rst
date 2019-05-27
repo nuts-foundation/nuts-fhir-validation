@@ -58,7 +58,7 @@ Patient
 .......
 
 :code:`patient` Reference is required and the :code:`identifier` field is present. :code:`display` Is optional.
-The :code:`system` of the identifier must be a valid Nuts system. In the case of patients this must be **https://nuts.nl/identifiers/bsn**.
+The :code:`system` of the identifier must be a valid Nuts system. In the case of patients this must be **urn:nuts:bsn**.
 This will be extended in the future when the PGO case is added.
 
 .. code-block:: json
@@ -67,7 +67,7 @@ This will be extended in the future when the PGO case is added.
       "resourceType": "Consent",
       "patient": {
         "identifier": {
-            "system": "https://nuts.nl/identifiers/bsn",
+            "system": "urn:nuts:bsn",
             "value": "999999990"
         },
         "display": "P. Patient"
@@ -98,7 +98,7 @@ If a valid identifier is not present, :code:`display` must be present in the ref
       "performer": {
         "type": "Practitioner",
         "identifier": {
-            "system": "https://nuts.nl/identifiers/agb",
+            "system": "urn:nuts:agbcode",
             "value": "00000007"
         },
         "display": "P. Practitioner"
@@ -112,7 +112,7 @@ If a valid identifier is not present, :code:`display` must be present in the ref
       "performer": [{
         "type": "Organization",
         "identifier": {
-            "system": "https://nuts.nl/identifiers/agb",
+            "system": "urn:nuts:agbcode",
             "value": "00000000"
         },
         "display": "P. Practitioner"
@@ -129,7 +129,7 @@ Organization
       "resourceType": "Consent",
       "organization": [{
         "identifier": {
-            "system": "https://nuts.nl/identifiers/agb",
+            "system": "urn:nuts:agbcode",
             "value": "00000000"
         },
         "display": "P. Practise"
@@ -187,7 +187,7 @@ In case of a relative, only the :code:`display` field will be required.
         "verifiedWith": {
             "type": "Patient",
             "identifier": {
-                "system": "https://nuts.nl/identifiers/bsn",
+                "system": "urn:nuts:bsn",
                 "value": "999999990"
             },
             "display": "P. Patient"
@@ -260,7 +260,7 @@ Nuts will also direct how a general consent category like *medical* can be trans
             },
             "reference": {
               "identifier": {
-                "system": "https://nuts.nl/identifiers/agb",
+                "system": "urn:nuts:agbcode",
                 "value": "00000007"
               },
               "display": "P. Practitioner"
@@ -323,7 +323,7 @@ The example below grants access to observations for Practitioner with agb=000000
       ],
       "patient": {
         "identifier": {
-            "system": "https://nuts.nl/identifiers/bsn",
+            "system": "urn:nuts:bsn",
             "value": "999999990"
         },
         "display": "P. Patient"
@@ -331,14 +331,14 @@ The example below grants access to observations for Practitioner with agb=000000
       "performer": [{
         "type": "Organization",
         "identifier": {
-            "system": "https://nuts.nl/identifiers/agb",
+            "system": "urn:nuts:agbcode",
             "value": "00000000"
         },
         "display": "P. Practitioner"
       }],
       "organization": [{
         "identifier": {
-            "system": "https://nuts.nl/identifiers/agb",
+            "system": "urn:nuts:agbcode",
             "value": "00000000"
         },
         "display": "P. Practise"
@@ -353,7 +353,7 @@ The example below grants access to observations for Practitioner with agb=000000
         "verifiedWith": {
             "type": "Patient",
             "identifier": {
-                "system": "https://nuts.nl/identifiers/bsn",
+                "system": "urn:nuts:bsn",
                 "value": "999999990"
             },
             "display": "P. Patient"
@@ -380,7 +380,7 @@ The example below grants access to observations for Practitioner with agb=000000
             },
             "reference": {
               "identifier": {
-                "system": "https://nuts.nl/identifiers/agb",
+                "system": "urn:nuts:agbcode",
                 "value": "00000007"
               },
               "display": "P. Practitioner"

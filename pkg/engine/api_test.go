@@ -96,10 +96,10 @@ func emptyValidationError() generated.ValidationResponse {
 func validationResult() generated.ValidationResponse {
 	return generated.ValidationResponse{
 		Consent: &generated.SimplifiedConsent{
-			Actors: []generated.ActorURI{"https://nuts.nl/identifiers/agb#00000007"},
-			Custodian: generated.CustodianURI("https://nuts.nl/identifiers/agb#00000000"),
+			Actors: []generated.Identifier{"urn:nuts:agbcode::00000007"},
+			Custodian: generated.Identifier("urn:nuts:agbcode::00000000"),
 			Resources: []string{"Observation"},
-			Subject: generated.SubjectURI("https://nuts.nl/identifiers/bsn#999999990"),
+			Subject: generated.Identifier("urn:nuts:bsn::999999990"),
 		},
 		Outcome: "valid",
 	}

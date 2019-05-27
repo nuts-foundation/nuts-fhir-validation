@@ -6,34 +6,24 @@ package generated
 import (
 	"bytes"
 	"compress/gzip"
-	"context"
 	"encoding/base64"
-	"encoding/json"
 	"fmt"
 	"github.com/deepmap/oapi-codegen/pkg/runtime"
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/labstack/echo/v4"
-	"io"
-	"net/http"
 	"strings"
 )
 
-// ActorURI defines component schema for ActorURI.
-type ActorURI string
-
-// CustodianURI defines component schema for CustodianURI.
-type CustodianURI string
+// Identifier defines component schema for Identifier.
+type Identifier string
 
 // SimplifiedConsent defines component schema for SimplifiedConsent.
 type SimplifiedConsent struct {
-	Actors    []ActorURI   `json:"actors"`
-	Custodian CustodianURI `json:"custodian"`
+	Actors    []Identifier `json:"actors"`
+	Custodian Identifier   `json:"custodian"`
 	Resources []string     `json:"resources"`
-	Subject   SubjectURI   `json:"subject"`
+	Subject   Identifier   `json:"subject"`
 }
-
-// SubjectURI defines component schema for SubjectURI.
-type SubjectURI string
 
 // ValidationError defines component schema for ValidationError.
 type ValidationError struct {
@@ -46,52 +36,6 @@ type ValidationResponse struct {
 	Consent          *SimplifiedConsent `json:"consent,omitempty"`
 	Outcome          string             `json:"outcome"`
 	ValidationErrors []ValidationError  `json:"validationErrors,omitempty"`
-}
-
-// Client which conforms to the OpenAPI3 specification for this service. The
-// server should be fully qualified with shema and server, ie,
-// https://deepmap.com.
-type Client struct {
-	Server string
-	Client http.Client
-}
-
-// Validate request with JSON body
-func (c *Client) Validate(ctx context.Context, body ValidateRequestBody) (*http.Response, error) {
-	req, err := NewValidateRequest(c.Server, body)
-	if err != nil {
-		return nil, err
-	}
-	req = req.WithContext(ctx)
-	return c.Client.Do(req)
-}
-
-// NewValidateRequest generates requests for Validate with JSON body
-func NewValidateRequest(server string, body ValidateRequestBody) (*http.Request, error) {
-	var bodyReader io.Reader
-
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
-	}
-	bodyReader = bytes.NewReader(buf)
-
-	return NewValidateRequestWithBody(server, "application/json", bodyReader)
-}
-
-// NewValidateRequestWithBody generates requests for Validate with non-JSON body
-func NewValidateRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
-	var err error
-
-	queryURL := fmt.Sprintf("%s/consent/validate", server)
-
-	req, err := http.NewRequest("POST", queryURL, body)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Add("Content-Type", contentType)
-	return req, nil
 }
 
 // ValidateRequestBody defines body for Validate for application/json ContentType.
@@ -131,22 +75,23 @@ func RegisterHandlers(router runtime.EchoRouter, si ServerInterface) {
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/5xVX4/jNBD/KiMvD7dS1BQOCZG344RQJXQ67XG8oD64zrTx4djGM+luWfW7o3HSZNv0",
-	"6EKfvOux/Zvfn8mzMqGNwaNnUtWzItNgq/PyneGQPj+sZF0jmWQj2+BVpT4/rKDGrfXW74AbBC2lBXTU",
-	"aecOoCEmbdhKOSZVKHzSbXSoKtUwR6rK0ndMC+9KW6OXQqRS7zZ3y/73gyoUH6IcIE7W79SxUO874lBb",
-	"7W9j0h5C2mlv/9ayPSETsOZ0D4TUI/8fCJfXEH6ybXR2a7F+Hzyh5znMqQRMXwMJTUi1KlRMIWKSl+Rc",
-	"RpZXlrHNi28SblWl7spJs3IQrBzVOo7AdEr6IH+PHd+65IziY6ESUuiS6QGdN/JOLoewhW1jE0yFxQR3",
-	"xs8lLuo2X9DwLVSf+rKMKYP6q7MJa1X9cSLpZYsvUU9PrEWe6Z7blq41axhOn/snarai7StNsyF/9+Pw",
-	"u+qa37WzdfbpzymFNMeW/w3caIZgTJcS1vDYWIewH44OmHd2j/6Wr1ok0jucP/NbH+ROO8AMpPiagrOT",
-	"h4hihXysAjp41k/w5gsFD5Zgk8Kf6O+LjIyTtp6nTR8YdN/IuZXuC4jBWXOAN7lnz/ChYzlQIxCydE1Q",
-	"h/4G58IjcGNpaPte5PFdKybp8YhJxveFlXy5Ws+6vLBY3i1G2tZnij0gRaF7zskDUudYWNmP1SD3IjE8",
-	"Wm6yYqFjE1qciWSm+fGvyZgNnGOhTndWzyMDGYJE0/er9RVp9+c2fP3kufTvLOgXhJ7wrY+yY/02XJku",
-	"H1dAEY3dWtNTtw0JTDpEDkCY9tYggd5r6/TGYSbUepD4nbaBojbCrLMGB4m8Fl7ULx9/3b/NOC3n+H54",
-	"ee70SkSjCrXHRD2m5eLbxTITHNHraFWl3i6WC8l01NxknspBuHJgM78aA2UlReDczKpWlRorenaQ+KdQ",
-	"HwbxeRBfx+gGBkpJzPSJvjJgz4nm1GE/wrNDM7zvlsv/9MDrZB9DkBFcxqB3fKMJNogeok6E9QJO+cgD",
-	"FprgajqloegHCYH2dZm/0QaJrOg8jvaFCPH9rB3GJy6j0zY3Ms1nH8bsbYTlOVDrTUhJsMjkzwXUta1O",
-	"B/lqo69B9/PpfLxmX07RWcBqCHyOd+qbfLTOgXYUwHrjuhplXn2lrUKx3pHk5DQDJCfHfwIAAP//ATqo",
-	"XagJAAA=",
+	"H4sIAAAAAAAC/5RVXYtbNxD9K4NaaLZcbKcphAj80ISyXQhOyEdfmmUZS2NfpbKkSnO9axb/9zK611/r",
+	"TZv1g5E9kubMOXNG98rEVYqBAhel71UxLa2wLq8sBXYLR1l+WSomu8QuBqXVJQXKzoDb74GukIVFzJAp",
+	"ZSryf1jC64+zBnA5N9FSA8RmBFf8UwH0t7gpYGIonDvDZAELYIDPH2awiN7HW7Iw3wCCjd3cE5joY4Bn",
+	"Wl8ABgvcUpCvHYSNZFuj7wjiogaWbk31vi9BNYrucJU8Ka1+hi4HHTouel6C1q+Gz+RLOAoNmLWe9J+X",
+	"J1EKNkUXWGupgALvoo54ofPC6OcvX77S+t10RhZTA+8+T/8g9NwazNTAm+nsbQMfP00vyVvKHoNt4O30",
+	"MkcKPjbwZjaVPDcmZos3ltbkY1pR4BsfDXrVKN4kKaZwdmGpto366FbJixT2TQ/pXLXDFhhgQyZJoRqV",
+	"ckyU2VHVHg3HXFeOaVUXP2ZaKK1+GB8aZjx0y/ioVbZ7aJgzbuS36QpH6zA87ZpMJXbZ9IBOC/lNrhad",
+	"F62ThtttbA5wz/h5iKp0869k+CmYKqh/OpfJKv3XjqTjAo9RH1Jcbxv1J3pnUfD/nnN8xFL1b+AWGaIx",
+	"Xc5k4bZ1nqSr69GwPOrr/xFwRaXgks7TfGoJ0HCHHqgCab5F1dnJTareqsc0lE1gvINnX0sM4ArMc/yb",
+	"wkUzeBpd4EMwRAbsCznV7KKBFL0zG3hWaw4Ms47lgCUoxFJ1ARv7G2QsALeuDGVfiLFDtxI1ejyixj6/",
+	"sFIvV9dnVT7QskabPW2nin2gkoTuc04+UOk8Cyvr/W6Qe6kw3Dpuq2KxYxNXdCaSORj1v1rw3NnbRu3u",
+	"1Pd7BioE8UDoV9ePSLs+bcPvt/jD/j1z1ANCd/iutxJxYREfsfH7KyiJjFs401Mn74fJm8QRCuW1M1QA",
+	"1+g8yhMghLoAMhl3YSgJjTDrnaFBooDCi7p8/3b9ouJ0XAf/7PjcLksioxq1plx6TJPR89GkEpwoYHJK",
+	"qxejyWgi4iG3lafxINx4YLNmTbFUJUXgWsyVVVrtd/TsUOHX0W4G8XkQH1PyAwNjcczhIX5kkp0Szbmj",
+	"flbWDq3wfplMnpTg+2Tfm6AieGiDvuNbLDAnCpAwF7Ij2PmjzkFoo7dl54amHyTy6NtxzIDGUClOdN7P",
+	"0JEI8etZOUx3PE4eXS3k8LKHuPfeXFg+B+qCiTkLFouMdUPpVivMG3keKVjAfj6djtfalwfrjOBqMHy1",
+	"d+6LvHXeA/oSwQXjO0syr75RVqMYl0V8spsB4pPtvwEAAP//vlJooo4JAAA=",
 }
 
 // GetSwagger returns the Swagger specification corresponding to the generated code

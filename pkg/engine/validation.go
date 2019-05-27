@@ -163,8 +163,8 @@ func extractSimplifiedConsent(bytes []byte) (*generated.SimplifiedConsent, error
 	jsonqFromString := jsonqFromString(string(bytes))
 
 	return &generated.SimplifiedConsent{
-		Subject: generated.SubjectURI(SubjectFrom(jsonqFromString)),
-		Custodian: generated.CustodianURI(CustodianFrom(jsonqFromString)),
+		Subject: generated.Identifier(SubjectFrom(jsonqFromString)),
+		Custodian: generated.Identifier(CustodianFrom(jsonqFromString)),
 		Actors: ActorsFrom(jsonqFromString),
 		Resources:ResourcesFrom(jsonqFromString),
 	}, nil
@@ -185,21 +185,21 @@ func ResourcesFrom(jsonq *gojsonq.JSONQ) []string {
 	return resources
 }
 
-func ActorsFrom(jsonq *gojsonq.JSONQ) []generated.ActorURI {
-	var actors []generated.ActorURI
+func ActorsFrom(jsonq *gojsonq.JSONQ) []generated.Identifier {
+	var actors []generated.Identifier
 	references := jsonq.Copy().From("provision.actor").Pluck("reference").([]interface{})
 
 	for _, id := range references {
 		refMap := id.(map[string]interface{})
 		idMap := refMap["identifier"].(map[string]interface{})
-		actors = append(actors, generated.ActorURI(fmt.Sprintf("%s#%s", idMap["system"], idMap["value"])))
+		actors = append(actors, generated.Identifier(fmt.Sprintf("%s::%s", idMap["system"], idMap["value"])))
 	}
 	return actors
 }
 
 // SubjectFrom extracts the patient from a given Consent json jsonq source
 func SubjectFrom(jsonq *gojsonq.JSONQ) string {
-	patientIdentifier := fmt.Sprintf("%s#%s",
+	patientIdentifier := fmt.Sprintf("%s::%s",
 		jsonq.Copy().Find("patient.identifier.system"),
 		jsonq.Copy().Find("patient.identifier.value"))
 
@@ -208,7 +208,7 @@ func SubjectFrom(jsonq *gojsonq.JSONQ) string {
 
 // CustodianFrom extracts the organization from a given Consent json jsonq source
 func CustodianFrom(jsonq *gojsonq.JSONQ) string {
-	organizationIdentifier := fmt.Sprintf("%s#%s",
+	organizationIdentifier := fmt.Sprintf("%s::%s",
 		jsonq.Copy().Find("organization.[0].identifier.system"),
 		jsonq.Copy().Find("organization.[0].identifier.value"))
 

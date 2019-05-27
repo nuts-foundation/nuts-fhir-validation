@@ -20,7 +20,7 @@
   ],
   "patient": {
     "identifier": {
-      "system": "https://nuts.nl/identifiers/bsn",
+      "system": "urn:nuts:bsn",
       "value": "999999990"
     },
     "display": "P. Patient"
@@ -28,14 +28,14 @@
   "performer": [{
     "type": "Organization",
     "identifier": {
-      "system": "https://nuts.nl/identifiers/agb",
+      "system": "urn:nuts:agbcode",
       "value": "00000000"
     },
     "display": "P. Practitioner"
   }],
   "organization": [{
     "identifier": {
-      "system": "https://nuts.nl/identifiers/agb",
+      "system": "urn:nuts:agbcode",
       "value": "00000000"
     },
     "display": "P. Practise"
@@ -50,7 +50,7 @@
     "verifiedWith": {
       "type": "Patient",
       "identifier": {
-        "system": "https://nuts.nl/identifiers/bsn",
+        "system": "urn:nuts:bsn",
         "value": "999999990"
       },
       "display": "P. Patient"
@@ -77,7 +77,7 @@
         },
         "reference": {
           "identifier": {
-            "system": "https://nuts.nl/identifiers/agb",
+            "system": "urn:nuts:agbcode",
             "value": "00000007"
           },
           "display": "P. Practitioner"
