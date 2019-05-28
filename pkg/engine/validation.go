@@ -34,6 +34,8 @@ import (
 	"gopkg.in/thedevsaddam/gojsonq.v2"
 )
 
+const concatIdFormat = "%s:%s"
+
 // --schemapath config flag
 const ConfigSchemaPath = "schemapath"
 
@@ -192,14 +194,14 @@ func ActorsFrom(jsonq *gojsonq.JSONQ) []generated.Identifier {
 	for _, id := range references {
 		refMap := id.(map[string]interface{})
 		idMap := refMap["identifier"].(map[string]interface{})
-		actors = append(actors, generated.Identifier(fmt.Sprintf("%s::%s", idMap["system"], idMap["value"])))
+		actors = append(actors, generated.Identifier(fmt.Sprintf(concatIdFormat, idMap["system"], idMap["value"])))
 	}
 	return actors
 }
 
 // SubjectFrom extracts the patient from a given Consent json jsonq source
 func SubjectFrom(jsonq *gojsonq.JSONQ) string {
-	patientIdentifier := fmt.Sprintf("%s::%s",
+	patientIdentifier := fmt.Sprintf(concatIdFormat,
 		jsonq.Copy().Find("patient.identifier.system"),
 		jsonq.Copy().Find("patient.identifier.value"))
 
@@ -208,7 +210,7 @@ func SubjectFrom(jsonq *gojsonq.JSONQ) string {
 
 // CustodianFrom extracts the organization from a given Consent json jsonq source
 func CustodianFrom(jsonq *gojsonq.JSONQ) string {
-	organizationIdentifier := fmt.Sprintf("%s::%s",
+	organizationIdentifier := fmt.Sprintf(concatIdFormat,
 		jsonq.Copy().Find("organization.[0].identifier.system"),
 		jsonq.Copy().Find("organization.[0].identifier.value"))
 
