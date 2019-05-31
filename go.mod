@@ -5,6 +5,7 @@ go 1.12
 require (
 	github.com/deepmap/oapi-codegen v1.1.2
 	github.com/getkin/kin-openapi v0.2.0
+	github.com/go-bindata/go-bindata v3.1.1+incompatible
 	github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b
 	github.com/golang/mock v1.3.1
 	github.com/labstack/echo/v4 v4.1.5

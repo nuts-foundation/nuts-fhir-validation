@@ -28,6 +28,12 @@ Installation
 
    go get github.com/nuts-foundation/nuts-fhir-validation
 
+Binary format fhir schema
+-------------------------
+
+go get -u github.com/go-bindata/go-bindata/... (outside module)
+cd schema && go-bindata -o schema.go -pkg schema .
+
 Configuration
 -------------
 

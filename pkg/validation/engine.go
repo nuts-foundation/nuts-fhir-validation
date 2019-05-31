@@ -24,6 +24,7 @@ import (
 	"github.com/deepmap/oapi-codegen/pkg/runtime"
 	"github.com/golang/glog"
 	"github.com/nuts-foundation/nuts-fhir-validation/pkg/generated"
+	"github.com/nuts-foundation/nuts-fhir-validation/schema"
 	engine "github.com/nuts-foundation/nuts-go/pkg"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
@@ -36,9 +37,9 @@ func NewValidationEngine() *engine.Engine {
 	vb := ValidationBackend()
 
 	return &engine.Engine{
-		Cmd: Cmd(),
+		Cmd:       Cmd(),
 		Configure: vb.Configure,
-		FlagSet:FlagSet(),
+		FlagSet:   FlagSet(),
 		Routes: func(router runtime.EchoRouter) {
 			generated.RegisterHandlers(router, vb)
 		},
@@ -115,9 +116,16 @@ func (vb *DefaultValidationBackend) Configure() error {
 
 	if viper.IsSet(ConfigSchemaPath) {
 		schemaPath = viper.GetString(ConfigSchemaPath)
-	}
+		vb.schemaLoader = gojsonschema.NewReferenceLoader(fmt.Sprintf("file://%s", schemaPath))
+	} else {
+		// load from bin data
+		data, err := schema.Asset("fhir.schema.json")
+		if err != nil {
+			return err
+		}
 
-	vb.schemaLoader = gojsonschema.NewReferenceLoader(fmt.Sprintf("file://%s", schemaPath))
+		vb.schemaLoader = gojsonschema.NewBytesLoader(data)
+	}
 
 	if _, err := vb.schemaLoader.LoadJSON(); err != nil {
 		return err

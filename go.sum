@@ -18,6 +18,8 @@ github.com/getkin/kin-openapi v0.2.0 h1:PbHHtYZpjKwZtGlIyELgA2DploRrsaXztoNNx9Hj
 github.com/getkin/kin-openapi v0.2.0/go.mod h1:V1z9xl9oF5Wt7v32ne4FmiF1alpS4dM6mNzoywPOXlk=
 github.com/ghodss/yaml v1.0.0 h1:wQHKEahhL6wmXdzwWG11gIVCkOv05bNOh+Rxn0yngAk=
 github.com/ghodss/yaml v1.0.0/go.mod h1:4dBDuWmgqj2HViK6kFavaiC9ZROes6MMH2rRYeMEF04=
+github.com/go-bindata/go-bindata v3.1.1+incompatible h1:tR4f0e4VTO7LK6B2YWyAoVEzG9ByG1wrXB4TL9+jiYg=
+github.com/go-bindata/go-bindata v3.1.1+incompatible/go.mod h1:xK8Dsgwmeed+BBsSy2XTopBn/8uK2HWuGSnA11C3Joo=
 github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b h1:VKtxabqXZkF25pY9ekfRL6a582T4P37/31XEstQ5p58=
 github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b/go.mod h1:SBH7ygxi8pfUlaOkMMuAQtPIUF8ecWP5IEl/CR7VP2Q=
 github.com/golang/mock v1.3.1 h1:qGJ6qTW+x6xX/my+8YUVl4WNpX9B7+/l2tRsHGZ7f2s=
@@ -50,15 +52,11 @@ github.com/mattn/go-isatty v0.0.7/go.mod h1:Iq45c/XA43vh69/j3iqttzPXn0bhXyGjM0Hd
 github.com/mitchellh/mapstructure v1.1.2 h1:fmNYVwqnSfB9mZU6OS2O6GsXM+wcskZDuKQzvN1EDeE=
 github.com/mitchellh/mapstructure v1.1.2/go.mod h1:FVVH3fgwuzCH5S8UJGiWEs2h04kUh9fWfEaFds41c1Y=
 github.com/nuts-foundation/nuts-crypto v0.0.0-20190514100741-540cb973b331/go.mod h1:WYfWFdU0lVkXCBuNNPAPfo6y6xwIEzMpLp3CkfTEto4=
-github.com/nuts-foundation/nuts-crypto v0.0.0-20190514100741-dc8c617c35ac/go.mod h1:odRVRQSK5zrUkhs+ihcNInvhoAg+SKGEuGWDVrZ7CNA=
 github.com/nuts-foundation/nuts-crypto v0.0.0-20190528080626-e86cf752a066/go.mod h1:m1QkgQOor1ntbMGy1un6m+Gc9kFDDr+DwhL8v+sZk4g=
 github.com/nuts-foundation/nuts-crypto v0.0.0-20190531090539-3dcbaf956e25 h1:OA6x3Vf9mgPW8thUzpxV5O7gRwJ2V4Y/8jwZb/acJ/0=
 github.com/nuts-foundation/nuts-crypto v0.0.0-20190531090539-3dcbaf956e25/go.mod h1:RP62FLETAn90pgwvFC3nn5Oc2GPpNI52lXwCyDKRlHM=
-github.com/nuts-foundation/nuts-fhir-validation v0.0.0-20190514125453-c09f0d0d4b7e h1:mNuCjY5VLR99mkMCJSSKCAAmTYF9lRG6P6fwZGa6kbY=
 github.com/nuts-foundation/nuts-go v0.0.0-20190513130535-6db5fc9f485ca/go.mod h1:vDPY3Qk0A8DfztMw9LukSk60hgG1BpaBV6bhGB/c6rc=
 github.com/nuts-foundation/nuts-go v0.0.0-20190513130535-ed32562df4321/go.mod h1:t2PnZu3V0wFlv2npZvXEC7jhrpDViEGrMYhYy/FMh0U=
-github.com/nuts-foundation/nuts-go v0.0.0-20190514111850-44f591ad8ca4 h1:Vk1FWAgKJgyIpcwFo6KmTrktm/awVfMnvX7Xm203AkI=
-github.com/nuts-foundation/nuts-go v0.0.0-20190514111850-44f591ad8ca4/go.mod h1:AYN/A/LjdHaT+6cCoa/rhfx7HyipO7WHdpNF9VdeYbU=
 github.com/nuts-foundation/nuts-go v0.0.0-20190531091145-8849e4f78c5a h1:AokukprjpVR1CAKUoXoOik23o2rrgfHAnk6Rfnp4OJU=
 github.com/nuts-foundation/nuts-go v0.0.0-20190531091145-8849e4f78c5a/go.mod h1:AAiSruIx7w+aVvkPmXt5k2v62/QHvBC8/8Sa8EmgQPg=
 github.com/pelletier/go-toml v1.2.0 h1:T5zMGML61Wp+FlcbWjRDT7yAxhJNAiPPLOFECq181zc=

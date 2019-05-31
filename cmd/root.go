@@ -30,6 +30,7 @@ var rootCmd = e.Cmd
 
 func Execute() {
 	flag.CommandLine.AddGoFlagSet(goflag.CommandLine)
+	flag.Parse()
 
 	if err := e.Configure(); err != nil {
 		panic(err)
