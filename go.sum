@@ -55,10 +55,13 @@ github.com/nuts-foundation/nuts-crypto v0.0.0-20190514100741-540cb973b331/go.mod
 github.com/nuts-foundation/nuts-crypto v0.0.0-20190528080626-e86cf752a066/go.mod h1:m1QkgQOor1ntbMGy1un6m+Gc9kFDDr+DwhL8v+sZk4g=
 github.com/nuts-foundation/nuts-crypto v0.0.0-20190531090539-3dcbaf956e25 h1:OA6x3Vf9mgPW8thUzpxV5O7gRwJ2V4Y/8jwZb/acJ/0=
 github.com/nuts-foundation/nuts-crypto v0.0.0-20190531090539-3dcbaf956e25/go.mod h1:RP62FLETAn90pgwvFC3nn5Oc2GPpNI52lXwCyDKRlHM=
+github.com/nuts-foundation/nuts-fhir-validation v0.0.0-20190531100010-e2c4af6ddd70/go.mod h1:3r14ATalZl+oYGJMEY6/VMmfbGKeWsK7Hitk46ZRiMg=
 github.com/nuts-foundation/nuts-go v0.0.0-20190513130535-6db5fc9f485ca/go.mod h1:vDPY3Qk0A8DfztMw9LukSk60hgG1BpaBV6bhGB/c6rc=
 github.com/nuts-foundation/nuts-go v0.0.0-20190513130535-ed32562df4321/go.mod h1:t2PnZu3V0wFlv2npZvXEC7jhrpDViEGrMYhYy/FMh0U=
 github.com/nuts-foundation/nuts-go v0.0.0-20190531091145-8849e4f78c5a h1:AokukprjpVR1CAKUoXoOik23o2rrgfHAnk6Rfnp4OJU=
 github.com/nuts-foundation/nuts-go v0.0.0-20190531091145-8849e4f78c5a/go.mod h1:AAiSruIx7w+aVvkPmXt5k2v62/QHvBC8/8Sa8EmgQPg=
+github.com/nuts-foundation/nuts-go v0.0.0-20190531110251-4cdd6f59cf74 h1:oGlz32LhvO2QTliuMMjDW+bLBjKjWis/ONtNqthYdwk=
+github.com/nuts-foundation/nuts-go v0.0.0-20190531110251-4cdd6f59cf74/go.mod h1:pgQb/sYzpjTTOLGWhZkUzIepFMQk10LQD0We/en3rAg=
 github.com/pelletier/go-toml v1.2.0 h1:T5zMGML61Wp+FlcbWjRDT7yAxhJNAiPPLOFECq181zc=
 github.com/pelletier/go-toml v1.2.0/go.mod h1:5z9KED0ma1S8pY6P1sdut58dfprrGBbd/94hg7ilaic=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=

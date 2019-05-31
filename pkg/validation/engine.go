@@ -40,6 +40,7 @@ func NewValidationEngine() *engine.Engine {
 		Cmd:       Cmd(),
 		Configure: vb.Configure,
 		FlagSet:   FlagSet(),
+		Name: "Validation",
 		Routes: func(router runtime.EchoRouter) {
 			generated.RegisterHandlers(router, vb)
 		},
