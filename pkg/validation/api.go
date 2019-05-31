@@ -17,7 +17,7 @@
  *
  */
 
-package engine
+package validation
 
 import (
 	"github.com/golang/glog"
@@ -29,7 +29,7 @@ import (
 
 // Validate handles the Post /consent/validate REST call. It always returns a 200 code with an outcome.
 // If invalid then a list of errors will be included.
-func (ve *DefaultValidationEngine) Validate(ctx echo.Context) error {
+func (ve *DefaultValidationBackend) Validate(ctx echo.Context) error {
 	buf, err := ioutil.ReadAll(ctx.Request().Body)
 	if err != nil {
 		glog.Error(err.Error())

@@ -17,19 +17,15 @@
  *
  */
 
-package engine
+package validation
 
 import (
 	"fmt"
-	"github.com/deepmap/oapi-codegen/pkg/runtime"
 	"github.com/golang/glog"
 	"github.com/nuts-foundation/nuts-fhir-validation/pkg/generated"
-	"github.com/nuts-foundation/nuts-go/pkg"
-	"github.com/spf13/cobra"
-	"github.com/spf13/pflag"
-	"github.com/spf13/viper"
 	"github.com/xeipuuv/gojsonschema"
 	"gopkg.in/thedevsaddam/gojsonq.v2"
+	"sync"
 )
 
 const concatIdFormat = "%s:%s"
@@ -40,123 +36,19 @@ const ConfigSchemaPath = "schemapath"
 // Default schemapath at './schema/fhir.schema.json'
 const ConfigSchemaPathDefault = "./schema/fhir.schema.json"
 
-type ValidationEngine interface {
-	ValidationClient
-	pkg.Engine
-}
-
-type DefaultValidationEngine struct {
+type DefaultValidationBackend struct {
 	schemaLoader gojsonschema.JSONLoader
 }
 
-// NewValidationEngine creates a new instance of the DefaultValidationEngine
-func NewValidationEngine() *DefaultValidationEngine {
-	return &DefaultValidationEngine{}
-}
+var instance *DefaultValidationBackend
+var oneBackend sync.Once
 
-// Cmd gives the validate sub-command for validating json consent records
-func (ve *DefaultValidationEngine) Cmd() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "validate",
-		Short: "validation commands",
-	}
-
-	cmd.AddCommand(&cobra.Command{
-		Use:   "consent [path_to/consent.json]",
-		Short: "validate the consent record at the given location",
-
-		Args: cobra.ExactArgs(1),
-		Run: func(cmd *cobra.Command, args []string) {
-			ve.ValidateAgainstSchemaConsentAt(args[0])
-		},
+func ValidationBackend() *DefaultValidationBackend {
+	oneBackend.Do(func() {
+		instance = &DefaultValidationBackend{}
 	})
 
-	cmd.AddCommand(&cobra.Command{
-		Use:   "subject [path_to/consent.json]",
-		Short: "extract subject identifier from consent",
-
-		Args: cobra.ExactArgs(1),
-		Run: func(cmd *cobra.Command, args []string) {
-			jsonqString := jsonqFromFile(args[0])
-			glog.Error(SubjectFrom(jsonqString))
-		},
-	})
-
-	cmd.AddCommand(&cobra.Command{
-		Use:   "organization [path_to/consent.json]",
-		Short: "extract organization identifier from consent",
-
-		Args: cobra.ExactArgs(1),
-		Run: func(cmd *cobra.Command, args []string) {
-			jsonqString := jsonqFromFile(args[0])
-			glog.Error(CustodianFrom(jsonqString))
-		},
-	})
-
-	cmd.AddCommand(&cobra.Command{
-		Use:   "actors [path_to/consent.json]",
-		Short: "extract actor identifiers from consent",
-
-		Args: cobra.ExactArgs(1),
-		Run: func(cmd *cobra.Command, args []string) {
-			jsonqString := jsonqFromFile(args[0])
-			glog.Error(ActorsFrom(jsonqString))
-		},
-	})
-
-	cmd.AddCommand(&cobra.Command{
-		Use:   "resources [path_to/consent.json]",
-		Short: "extract resources from consent",
-
-		Args: cobra.ExactArgs(1),
-		Run: func(cmd *cobra.Command, args []string) {
-			jsonqString := jsonqFromFile(args[0])
-			glog.Error(ResourcesFrom(jsonqString))
-		},
-	})
-
-	return cmd
-}
-
-// Configure loads the given configurations in the engine.
-func (ve *DefaultValidationEngine) Configure() error {
-	schemaPath := ConfigSchemaPathDefault
-
-	if viper.IsSet(ConfigSchemaPath) {
-		schemaPath = viper.GetString(ConfigSchemaPath)
-	}
-
-	ve.schemaLoader = gojsonschema.NewReferenceLoader(fmt.Sprintf("file://%s", schemaPath))
-
-	if _, err := ve.schemaLoader.LoadJSON(); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// FlasSet returns all global configuration possibilities so they can be displayed through the help command
-func (ve *DefaultValidationEngine) FlagSet() *pflag.FlagSet {
-	flags := pflag.NewFlagSet("validate", pflag.ContinueOnError)
-
-	flags.String(ConfigSchemaPath, ConfigSchemaPathDefault, "location of json schema, default './schema/fhir.schema.json'")
-
-	return flags
-}
-
-// Routes passes the Echo router to the specific engine for it to register their routes.
-func (ve *DefaultValidationEngine) Routes(router runtime.EchoRouter) {
-	generated.RegisterHandlers(router, ve)
-}
-
-// Shutdown the engine
-func (ve *DefaultValidationEngine) Shutdown() error {
-	return nil
-}
-
-// Start the engine, this will spawn any clients, background tasks or active processes.
-func (ve *DefaultValidationEngine) Start() error {
-	return nil
+	return instance
 }
 
 func extractSimplifiedConsent(bytes []byte) (*generated.SimplifiedConsent, error) {
@@ -224,20 +116,20 @@ func jsonqFromString(source string) *gojsonq.JSONQ {
 }
 
 // Validate the consent record at the given location (on disk)
-func (ve *DefaultValidationEngine) ValidateAgainstSchemaConsentAt(source string) (bool, []string, error) {
+func (ve *DefaultValidationBackend) ValidateAgainstSchemaConsentAt(source string) (bool, []string, error) {
 	documentLoader := gojsonschema.NewReferenceLoader(fmt.Sprintf("file://%s", source))
 
 	return ve.validateAgainstSchema(documentLoader)
 }
 
 // Validate the consent record against the schema
-func (ve *DefaultValidationEngine) ValidateAgainstSchema(json []byte) (bool, []string, error) {
+func (ve *DefaultValidationBackend) ValidateAgainstSchema(json []byte) (bool, []string, error) {
 	documentLoader := gojsonschema.NewBytesLoader(json)
 
 	return ve.validateAgainstSchema(documentLoader)
 }
 
-func (ve *DefaultValidationEngine) validateAgainstSchema(loader gojsonschema.JSONLoader) (bool, []string, error) {
+func (ve *DefaultValidationBackend) validateAgainstSchema(loader gojsonschema.JSONLoader) (bool, []string, error) {
 	result, err := gojsonschema.Validate(ve.schemaLoader, loader)
 	if err != nil {
 		glog.Error(fmt.Sprintf("The document failed to validate : %s", err.Error()))

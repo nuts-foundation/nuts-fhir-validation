@@ -17,7 +17,7 @@
  *
  */
 
-package engine
+package validation
 
 type ValidationClient interface {
 	// ValidateAgainstSchemaConsentAt validates the consent record at the given location (on disk)
@@ -28,5 +28,5 @@ type ValidationClient interface {
 }
 
 func NewValidationClient() ValidationClient {
-	return NewValidationEngine()
+	return ValidationBackend()
 }

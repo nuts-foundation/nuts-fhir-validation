@@ -21,16 +21,15 @@ package cmd
 
 import (
 	goflag "flag"
-	"github.com/nuts-foundation/nuts-fhir-validation/pkg/engine"
+	"github.com/nuts-foundation/nuts-fhir-validation/pkg/validation"
 	flag "github.com/spf13/pflag"
 )
 
-var e = engine.NewValidationEngine()
-var rootCmd = e.Cmd()
+var e = validation.NewValidationEngine()
+var rootCmd = e.Cmd
 
 func Execute() {
 	flag.CommandLine.AddGoFlagSet(goflag.CommandLine)
-	goflag.Parse()
 
 	if err := e.Configure(); err != nil {
 		panic(err)

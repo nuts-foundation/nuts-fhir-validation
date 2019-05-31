@@ -17,7 +17,7 @@
  *
  */
 
-package engine
+package validation
 
 import (
 	"github.com/spf13/viper"
@@ -25,8 +25,8 @@ import (
 	"testing"
 )
 
-func TestDefaultValidationEngine_ValidateAgainstSchema(t *testing.T) {
-	client := createTempEngine()
+func TestDefaultValidationBackend_ValidateAgainstSchema(t *testing.T) {
+	client := validationBackend()
 
 	t.Run("Valid json returns true", func(t *testing.T) {
 
@@ -40,8 +40,8 @@ func TestDefaultValidationEngine_ValidateAgainstSchema(t *testing.T) {
 	})
 }
 
-func TestDefaultValidationEngine_ValidateAgainstSchemaConsentAt(t *testing.T) {
-	client := createTempEngine()
+func TestDefaultValidationBackend_ValidateAgainstSchemaConsentAt(t *testing.T) {
+	client := validationBackend()
 
 	t.Run("Valid json returns true", func(t *testing.T) {
 
@@ -80,8 +80,8 @@ func TestDefaultValidationEngine_ValidateAgainstSchemaConsentAt(t *testing.T) {
 	})
 }
 
-func createTempEngine() DefaultValidationEngine {
-	client := DefaultValidationEngine{}
+func validationBackend() DefaultValidationBackend {
+	client := DefaultValidationBackend{}
 	viper.Set(ConfigSchemaPath, "../../schema/fhir.schema.json")
 	client.Configure()
 	return client

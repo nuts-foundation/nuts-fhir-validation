@@ -17,7 +17,7 @@
  *
  */
 
-package engine
+package validation
 
 import (
 	"bytes"
@@ -29,8 +29,8 @@ import (
 	"testing"
 )
 
-func TestDefaultValidationEngine_Validate(t *testing.T) {
-	client := createTempEngine()
+func TestDefaultValidationBackend_Validate(t *testing.T) {
+	client := validationBackend()
 
 	t.Run("Empty json returns 200 with error body", func(t *testing.T) {
 		ctrl := gomock.NewController(t)
