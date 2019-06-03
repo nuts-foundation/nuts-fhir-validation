@@ -113,10 +113,8 @@ func Cmd() *cobra.Command {
 
 // Configure loads the given configurations in the engine.
 func (vb *DefaultValidationBackend) Configure() error {
-	schemaPath := ConfigSchemaPathDefault
-
-	if viper.IsSet(ConfigSchemaPath) {
-		schemaPath = viper.GetString(ConfigSchemaPath)
+	if viper.IsSet(ConfigSchemaPath) && viper.GetString(ConfigSchemaPath) != ConfigSchemaPathDefault {
+		schemaPath := viper.GetString(ConfigSchemaPath)
 		vb.schemaLoader = gojsonschema.NewReferenceLoader(fmt.Sprintf("file://%s", schemaPath))
 	} else {
 		// load from bin data

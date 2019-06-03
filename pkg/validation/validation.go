@@ -32,9 +32,8 @@ const concatIdFormat = "%s:%s"
 
 // --schemapath config flag
 const ConfigSchemaPath = "schemapath"
-
-// Default schemapath at './schema/fhir.schema.json'
-const ConfigSchemaPathDefault = "./schema/fhir.schema.json"
+// default use Asset
+const ConfigSchemaPathDefault = ""
 
 type DefaultValidationBackend struct {
 	schemaLoader gojsonschema.JSONLoader
