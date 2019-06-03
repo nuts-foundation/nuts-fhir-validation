@@ -28,7 +28,6 @@ import (
 	engine "github.com/nuts-foundation/nuts-go/pkg"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
-	"github.com/spf13/viper"
 	"github.com/xeipuuv/gojsonschema"
 )
 
@@ -39,6 +38,8 @@ func NewValidationEngine() *engine.Engine {
 	return &engine.Engine{
 		Cmd:       Cmd(),
 		Configure: vb.Configure,
+		Config: &vb.Config,
+		ConfigKey: "fhir",
 		FlagSet:   FlagSet(),
 		Name: "Validation",
 		Routes: func(router runtime.EchoRouter) {
@@ -113,9 +114,8 @@ func Cmd() *cobra.Command {
 
 // Configure loads the given configurations in the engine.
 func (vb *DefaultValidationBackend) Configure() error {
-	if viper.IsSet(ConfigSchemaPath) && viper.GetString(ConfigSchemaPath) != ConfigSchemaPathDefault {
-		schemaPath := viper.GetString(ConfigSchemaPath)
-		vb.schemaLoader = gojsonschema.NewReferenceLoader(fmt.Sprintf("file://%s", schemaPath))
+	if vb.Config.Schemapath != ConfigSchemaPathDefault {
+		vb.schemaLoader = gojsonschema.NewReferenceLoader(fmt.Sprintf("file://%s", vb.Config.Schemapath))
 	} else {
 		// load from bin data
 		data, err := schema.Asset("fhir.schema.json")
@@ -137,7 +137,7 @@ func (vb *DefaultValidationBackend) Configure() error {
 func FlagSet() *pflag.FlagSet {
 	flags := pflag.NewFlagSet("validate", pflag.ContinueOnError)
 
-	flags.String(ConfigSchemaPath, ConfigSchemaPathDefault, "location of json schema, default './schema/fhir.schema.json'")
+	flags.String(ConfigSchemaPath, ConfigSchemaPathDefault, "location of json schema, default nested Asset")
 
 	return flags
 }

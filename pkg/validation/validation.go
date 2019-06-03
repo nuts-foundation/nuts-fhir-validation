@@ -36,6 +36,9 @@ const ConfigSchemaPath = "schemapath"
 const ConfigSchemaPathDefault = ""
 
 type DefaultValidationBackend struct {
+	Config struct {
+		Schemapath string
+	}
 	schemaLoader gojsonschema.JSONLoader
 }
 

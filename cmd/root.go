@@ -20,17 +20,29 @@
 package cmd
 
 import (
-	goflag "flag"
+	"flag"
 	"github.com/nuts-foundation/nuts-fhir-validation/pkg/validation"
-	flag "github.com/spf13/pflag"
+	cfg "github.com/nuts-foundation/nuts-go/pkg"
+	"github.com/spf13/pflag"
 )
 
 var e = validation.NewValidationEngine()
 var rootCmd = e.Cmd
 
 func Execute() {
-	flag.CommandLine.AddGoFlagSet(goflag.CommandLine)
-	flag.Parse()
+	// temp needed for glog
+	pflag.CommandLine.AddGoFlagSet(flag.CommandLine)
+
+	c := cfg.NewNutsGlobalConfig()
+	c.IgnoredPrefixes = append(c.IgnoredPrefixes, "fhir")
+	c.RegisterFlags(e)
+	if err := c.Load(); err != nil {
+		panic(err)
+	}
+
+	if err := c.InjectIntoEngine(e); err != nil {
+		panic(err)
+	}
 
 	if err := e.Configure(); err != nil {
 		panic(err)
