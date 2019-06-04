@@ -42,6 +42,7 @@ type Validator struct {
 		Schemapath string
 	}
 	schemaLoader gojsonschema.JSONLoader
+	configOnce sync.Once
 }
 
 // Identifier is a synonym for string
@@ -144,21 +145,26 @@ func (ve *Validator) validateAgainstSchema(loader gojsonschema.JSONLoader) (bool
 
 // Configure loads the given configurations in the engine.
 func (vb *Validator) Configure() error {
-	if vb.Config.Schemapath != ConfigSchemaPathDefault {
-		vb.schemaLoader = gojsonschema.NewReferenceLoader(fmt.Sprintf("file://%s", vb.Config.Schemapath))
-	} else {
-		// load from bin data
-		data, err := schema.Asset("fhir.schema.json")
-		if err != nil {
-			return err
+	var err error
+
+	vb.configOnce.Do(func() {
+		if vb.Config.Schemapath != ConfigSchemaPathDefault {
+			vb.schemaLoader = gojsonschema.NewReferenceLoader(fmt.Sprintf("file://%s", vb.Config.Schemapath))
+		} else {
+			// load from bin data
+			var data []byte
+			data, err = schema.Asset("fhir.schema.json")
+			if err != nil {
+				return
+			}
+
+			vb.schemaLoader = gojsonschema.NewBytesLoader(data)
 		}
 
-		vb.schemaLoader = gojsonschema.NewBytesLoader(data)
-	}
+		if _, err = vb.schemaLoader.LoadJSON(); err != nil {
+			return
+		}
+	})
 
-	if _, err := vb.schemaLoader.LoadJSON(); err != nil {
-		return err
-	}
-
-	return nil
+	return err
 }
