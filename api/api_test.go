@@ -104,7 +104,7 @@ func validationResult() ValidationResponse {
 }
 
 func validationBackend() ApiWrapper {
-	client := pkg.DefaultValidationBackend{}
+	client := pkg.Validator{}
 	client.Configure()
 	return ApiWrapper{&client}
 }

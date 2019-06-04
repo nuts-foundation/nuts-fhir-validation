@@ -32,7 +32,7 @@ import (
 
 // NewValidationEngine creates a new Engine configuration
 func NewValidationEngine() *engine.Engine {
-	vb := pkg.ValidationBackend()
+	vb := pkg.ValidatorInstance()
 
 	return &engine.Engine{
 		Cmd:       Cmd(vb),
@@ -48,7 +48,7 @@ func NewValidationEngine() *engine.Engine {
 }
 
 // Cmd gives the validate sub-command for validating json consent records
-func Cmd(vb *pkg.DefaultValidationBackend) *cobra.Command {
+func Cmd(vb *pkg.Validator) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "validate",
 		Short: "validation commands",

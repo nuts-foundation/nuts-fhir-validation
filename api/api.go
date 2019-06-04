@@ -29,7 +29,7 @@ import (
 )
 
 type ApiWrapper struct {
-	Vb *pkg.DefaultValidationBackend
+	Vb *pkg.Validator
 }
 
 // Validate handles the Post /consent/validate REST call. It always returns a 200 code with an outcome.

@@ -19,7 +19,7 @@
 
 package pkg
 
-type ValidationClient interface {
+type ValidatorClient interface {
 	// ValidateAgainstSchemaConsentAt validates the consent record at the given location (on disk)
 	ValidateAgainstSchemaConsentAt(source string) (bool, []string, error)
 
@@ -27,6 +27,6 @@ type ValidationClient interface {
 	ValidateAgainstSchema(json []byte) (bool, []string, error)
 }
 
-func NewValidationClient() ValidationClient {
-	return ValidationBackend()
+func NewValidatorClient() ValidatorClient {
+	return ValidatorInstance()
 }

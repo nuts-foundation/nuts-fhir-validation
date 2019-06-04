@@ -35,7 +35,7 @@ const ConfigSchemaPath = "schemapath"
 // default use Asset
 const ConfigSchemaPathDefault = ""
 
-type DefaultValidationBackend struct {
+type Validator struct {
 	Config struct {
 		Schemapath string
 	}
@@ -44,12 +44,12 @@ type DefaultValidationBackend struct {
 
 type Identifier string
 
-var instance *DefaultValidationBackend
+var instance *Validator
 var oneBackend sync.Once
 
-func ValidationBackend() *DefaultValidationBackend {
+func ValidatorInstance() *Validator {
 	oneBackend.Do(func() {
-		instance = &DefaultValidationBackend{}
+		instance = &Validator{}
 	})
 
 	return instance
@@ -101,20 +101,20 @@ func CustodianFrom(jsonq *gojsonq.JSONQ) string {
 }
 
 // Validate the consent record at the given location (on disk)
-func (ve *DefaultValidationBackend) ValidateAgainstSchemaConsentAt(source string) (bool, []string, error) {
+func (ve *Validator) ValidateAgainstSchemaConsentAt(source string) (bool, []string, error) {
 	documentLoader := gojsonschema.NewReferenceLoader(fmt.Sprintf("file://%s", source))
 
 	return ve.validateAgainstSchema(documentLoader)
 }
 
 // Validate the consent record against the schema
-func (ve *DefaultValidationBackend) ValidateAgainstSchema(json []byte) (bool, []string, error) {
+func (ve *Validator) ValidateAgainstSchema(json []byte) (bool, []string, error) {
 	documentLoader := gojsonschema.NewBytesLoader(json)
 
 	return ve.validateAgainstSchema(documentLoader)
 }
 
-func (ve *DefaultValidationBackend) validateAgainstSchema(loader gojsonschema.JSONLoader) (bool, []string, error) {
+func (ve *Validator) validateAgainstSchema(loader gojsonschema.JSONLoader) (bool, []string, error) {
 	result, err := gojsonschema.Validate(ve.schemaLoader, loader)
 	if err != nil {
 		logrus.Error(fmt.Sprintf("The document failed to validate : %s", err.Error()))
@@ -137,7 +137,7 @@ func (ve *DefaultValidationBackend) validateAgainstSchema(loader gojsonschema.JS
 }
 
 // Configure loads the given configurations in the engine.
-func (vb *DefaultValidationBackend) Configure() error {
+func (vb *Validator) Configure() error {
 	if vb.Config.Schemapath != ConfigSchemaPathDefault {
 		vb.schemaLoader = gojsonschema.NewReferenceLoader(fmt.Sprintf("file://%s", vb.Config.Schemapath))
 	} else {

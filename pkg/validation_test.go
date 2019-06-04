@@ -79,8 +79,8 @@ func TestDefaultValidationBackend_ValidateAgainstSchemaConsentAt(t *testing.T) {
 	})
 }
 
-func validationBackend() DefaultValidationBackend {
-	client := DefaultValidationBackend{}
+func validationBackend() Validator {
+	client := Validator{}
 	client.Configure()
 	return client
 }
