@@ -19,6 +19,8 @@
 
 package pkg
 
+import "github.com/sirupsen/logrus"
+
 // ValidatorClient is the main interface for the Validator
 type ValidatorClient interface {
 	// ValidateAgainstSchemaConsentAt validates the consent record at the given location (on disk)
@@ -30,5 +32,11 @@ type ValidatorClient interface {
 
 // NewValidatorClient returns the default Validator client, either a Local- or RemoteClient
 func NewValidatorClient() ValidatorClient {
+	// temporary
+	validator := ValidatorInstance()
+	if err := validator.Configure(); err != nil {
+		logrus.Panic(err)
+	}
+
 	return ValidatorInstance()
 }
