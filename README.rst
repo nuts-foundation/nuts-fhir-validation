@@ -34,29 +34,13 @@ Binary format fhir schema
 go get -u github.com/go-bindata/go-bindata/... (outside module)
 cd schema && go-bindata -o schema.go -pkg schema .
 
-Configuration
--------------
-
-The lib is configured using `Viper <https://github.com/spf13/viper>`_, thus it will work well with `Cobra <https://github.com/spf13/cobra>`_ as well.
-Command flags can be added to a command using the `config.FlagSet()` helper function.
-
-.. code-block:: go
-
-   cmd := newRootCommand()
-   cmd.Flags().AddFlagSet(FlagSet())
-
-The following config options are available:
-
-.. code-block:: shell
-
-   Flags:
 
 Usage
 -----
 
 .. code-block:: go
 
-   client := validation.NewValidationClient()
+   client := validation.NewValidatorClient()
 
 Cmd
 ---
