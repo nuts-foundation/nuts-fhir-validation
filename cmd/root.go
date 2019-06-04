@@ -34,7 +34,7 @@ func Execute() {
 	pflag.CommandLine.AddGoFlagSet(flag.CommandLine)
 
 	c := cfg.NewNutsGlobalConfig()
-	c.IgnoredPrefixes = append(c.IgnoredPrefixes, "fhir")
+	c.IgnoredPrefixes = append(c.IgnoredPrefixes, e.ConfigKey)
 	c.RegisterFlags(e)
 	if err := c.Load(); err != nil {
 		panic(err)
