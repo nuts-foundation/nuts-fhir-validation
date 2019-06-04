@@ -17,39 +17,38 @@
  *
  */
 
-package validation
+package engine
 
 import (
-	"fmt"
 	"github.com/deepmap/oapi-codegen/pkg/runtime"
-	"github.com/nuts-foundation/nuts-fhir-validation/pkg/generated"
-	"github.com/nuts-foundation/nuts-fhir-validation/schema"
+	"github.com/nuts-foundation/nuts-fhir-validation/api"
+	"github.com/nuts-foundation/nuts-fhir-validation/pkg"
 	engine "github.com/nuts-foundation/nuts-go/pkg"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
-	"github.com/xeipuuv/gojsonschema"
+	"gopkg.in/thedevsaddam/gojsonq.v2"
 )
 
 // NewValidationEngine creates a new Engine configuration
 func NewValidationEngine() *engine.Engine {
-	vb := ValidationBackend()
+	vb := pkg.ValidationBackend()
 
 	return &engine.Engine{
-		Cmd:       Cmd(),
+		Cmd:       Cmd(vb),
 		Configure: vb.Configure,
 		Config: &vb.Config,
 		ConfigKey: "fhir",
 		FlagSet:   FlagSet(),
 		Name: "Validation",
 		Routes: func(router runtime.EchoRouter) {
-			generated.RegisterHandlers(router, vb)
+			api.RegisterHandlers(router, &api.ApiWrapper{Vb: vb})
 		},
 	}
 }
 
 // Cmd gives the validate sub-command for validating json consent records
-func Cmd() *cobra.Command {
+func Cmd(vb *pkg.DefaultValidationBackend) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "validate",
 		Short: "validation commands",
@@ -61,7 +60,7 @@ func Cmd() *cobra.Command {
 
 		Args: cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
-			NewValidationClient().ValidateAgainstSchemaConsentAt(args[0])
+			vb.ValidateAgainstSchemaConsentAt(args[0])
 		},
 	})
 
@@ -72,7 +71,7 @@ func Cmd() *cobra.Command {
 		Args: cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			jsonqString := jsonqFromFile(args[0])
-			logrus.Error(SubjectFrom(jsonqString))
+			logrus.Error(pkg.SubjectFrom(jsonqString))
 		},
 	})
 
@@ -83,7 +82,7 @@ func Cmd() *cobra.Command {
 		Args: cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			jsonqString := jsonqFromFile(args[0])
-			logrus.Error(CustodianFrom(jsonqString))
+			logrus.Error(pkg.CustodianFrom(jsonqString))
 		},
 	})
 
@@ -94,7 +93,7 @@ func Cmd() *cobra.Command {
 		Args: cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			jsonqString := jsonqFromFile(args[0])
-			logrus.Error(ActorsFrom(jsonqString))
+			logrus.Error(pkg.ActorsFrom(jsonqString))
 		},
 	})
 
@@ -105,39 +104,22 @@ func Cmd() *cobra.Command {
 		Args: cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			jsonqString := jsonqFromFile(args[0])
-			logrus.Error(ResourcesFrom(jsonqString))
+			logrus.Error(pkg.ResourcesFrom(jsonqString))
 		},
 	})
 
 	return cmd
 }
 
-// Configure loads the given configurations in the engine.
-func (vb *DefaultValidationBackend) Configure() error {
-	if vb.Config.Schemapath != ConfigSchemaPathDefault {
-		vb.schemaLoader = gojsonschema.NewReferenceLoader(fmt.Sprintf("file://%s", vb.Config.Schemapath))
-	} else {
-		// load from bin data
-		data, err := schema.Asset("fhir.schema.json")
-		if err != nil {
-			return err
-		}
-
-		vb.schemaLoader = gojsonschema.NewBytesLoader(data)
-	}
-
-	if _, err := vb.schemaLoader.LoadJSON(); err != nil {
-		return err
-	}
-
-	return nil
-}
-
 // FlasSet returns all global configuration possibilities so they can be displayed through the help command
 func FlagSet() *pflag.FlagSet {
 	flags := pflag.NewFlagSet("validate", pflag.ContinueOnError)
 
-	flags.String(ConfigSchemaPath, ConfigSchemaPathDefault, "location of json schema, default nested Asset")
+	flags.String(pkg.ConfigSchemaPath, pkg.ConfigSchemaPathDefault, "location of json schema, default nested Asset")
 
 	return flags
+}
+
+func jsonqFromFile(source string) *gojsonq.JSONQ {
+	return gojsonq.New().File(source)
 }

@@ -20,11 +20,11 @@
 package cmd
 
 import (
-	"github.com/nuts-foundation/nuts-fhir-validation/pkg/validation"
+	"github.com/nuts-foundation/nuts-fhir-validation/engine"
 	cfg "github.com/nuts-foundation/nuts-go/pkg"
 )
 
-var e = validation.NewValidationEngine()
+var e = engine.NewValidationEngine()
 var rootCmd = e.Cmd
 
 func Execute() {

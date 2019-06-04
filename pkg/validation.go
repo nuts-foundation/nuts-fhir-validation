@@ -17,11 +17,11 @@
  *
  */
 
-package validation
+package pkg
 
 import (
 	"fmt"
-	"github.com/nuts-foundation/nuts-fhir-validation/pkg/generated"
+	"github.com/nuts-foundation/nuts-fhir-validation/schema"
 	"github.com/sirupsen/logrus"
 	"github.com/xeipuuv/gojsonschema"
 	"gopkg.in/thedevsaddam/gojsonq.v2"
@@ -42,6 +42,8 @@ type DefaultValidationBackend struct {
 	schemaLoader gojsonschema.JSONLoader
 }
 
+type Identifier string
+
 var instance *DefaultValidationBackend
 var oneBackend sync.Once
 
@@ -51,17 +53,6 @@ func ValidationBackend() *DefaultValidationBackend {
 	})
 
 	return instance
-}
-
-func extractSimplifiedConsent(bytes []byte) (*generated.SimplifiedConsent, error) {
-	jsonqFromString := jsonqFromString(string(bytes))
-
-	return &generated.SimplifiedConsent{
-		Subject: generated.Identifier(SubjectFrom(jsonqFromString)),
-		Custodian: generated.Identifier(CustodianFrom(jsonqFromString)),
-		Actors: ActorsFrom(jsonqFromString),
-		Resources:ResourcesFrom(jsonqFromString),
-	}, nil
 }
 
 func ResourcesFrom(jsonq *gojsonq.JSONQ) []string {
@@ -79,14 +70,14 @@ func ResourcesFrom(jsonq *gojsonq.JSONQ) []string {
 	return resources
 }
 
-func ActorsFrom(jsonq *gojsonq.JSONQ) []generated.Identifier {
-	var actors []generated.Identifier
+func ActorsFrom(jsonq *gojsonq.JSONQ) []Identifier {
+	var actors []Identifier
 	references := jsonq.Copy().From("provision.actor").Pluck("reference").([]interface{})
 
 	for _, id := range references {
 		refMap := id.(map[string]interface{})
 		idMap := refMap["identifier"].(map[string]interface{})
-		actors = append(actors, generated.Identifier(fmt.Sprintf(concatIdFormat, idMap["system"], idMap["value"])))
+		actors = append(actors, Identifier(fmt.Sprintf(concatIdFormat, idMap["system"], idMap["value"])))
 	}
 	return actors
 }
@@ -107,14 +98,6 @@ func CustodianFrom(jsonq *gojsonq.JSONQ) string {
 		jsonq.Copy().Find("organization.[0].identifier.value"))
 
 	return organizationIdentifier
-}
-
-func jsonqFromFile(source string) *gojsonq.JSONQ {
-	return gojsonq.New().File(source)
-}
-
-func jsonqFromString(source string) *gojsonq.JSONQ {
-	return gojsonq.New().JSONString(source)
 }
 
 // Validate the consent record at the given location (on disk)
@@ -151,4 +134,25 @@ func (ve *DefaultValidationBackend) validateAgainstSchema(loader gojsonschema.JS
 		}
 	}
 	return false, errors, nil
+}
+
+// Configure loads the given configurations in the engine.
+func (vb *DefaultValidationBackend) Configure() error {
+	if vb.Config.Schemapath != ConfigSchemaPathDefault {
+		vb.schemaLoader = gojsonschema.NewReferenceLoader(fmt.Sprintf("file://%s", vb.Config.Schemapath))
+	} else {
+		// load from bin data
+		data, err := schema.Asset("fhir.schema.json")
+		if err != nil {
+			return err
+		}
+
+		vb.schemaLoader = gojsonschema.NewBytesLoader(data)
+	}
+
+	if _, err := vb.schemaLoader.LoadJSON(); err != nil {
+		return err
+	}
+
+	return nil
 }

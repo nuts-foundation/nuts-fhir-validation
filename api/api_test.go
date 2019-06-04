@@ -17,12 +17,12 @@
  *
  */
 
-package validation
+package api
 
 import (
 	"bytes"
 	"github.com/golang/mock/gomock"
-	"github.com/nuts-foundation/nuts-fhir-validation/pkg/generated"
+	"github.com/nuts-foundation/nuts-fhir-validation/pkg"
 	"github.com/nuts-foundation/nuts-go/mock"
 	"io/ioutil"
 	"net/http"
@@ -37,7 +37,7 @@ func TestDefaultValidationBackend_Validate(t *testing.T) {
 		defer ctrl.Finish()
 		echo := mock.NewMockContext(ctrl)
 
-		json, err := ioutil.ReadFile("../../examples/empty.json")
+		json, err := ioutil.ReadFile("../examples/empty.json")
 
 		request := &http.Request{
 			Body: ioutil.NopCloser(bytes.NewReader(json)),
@@ -58,7 +58,7 @@ func TestDefaultValidationBackend_Validate(t *testing.T) {
 		defer ctrl.Finish()
 		echo := mock.NewMockContext(ctrl)
 
-		json, err := ioutil.ReadFile("../../examples/observation_consent.json")
+		json, err := ioutil.ReadFile("../examples/observation_consent.json")
 
 		request := &http.Request{
 			Body: ioutil.NopCloser(bytes.NewReader(json)),
@@ -75,10 +75,10 @@ func TestDefaultValidationBackend_Validate(t *testing.T) {
 	})
 }
 
-func emptyValidationError() generated.ValidationResponse {
-	return generated.ValidationResponse{
+func emptyValidationError() ValidationResponse {
+	return ValidationResponse{
 		Outcome: "invalid",
-		ValidationErrors: []generated.ValidationError{
+		ValidationErrors: []ValidationError{
 			{
 				Type:    "constraint",
 				Message: "(root): Must validate one and only one schema (oneOf)",
@@ -91,14 +91,20 @@ func emptyValidationError() generated.ValidationResponse {
 	}
 }
 
-func validationResult() generated.ValidationResponse {
-	return generated.ValidationResponse{
-		Consent: &generated.SimplifiedConsent{
-			Actors: []generated.Identifier{"urn:oid:2.16.840.1.113883.2.4.6.1:00000007"},
-			Custodian: generated.Identifier("urn:oid:2.16.840.1.113883.2.4.6.1:00000000"),
+func validationResult() ValidationResponse {
+	return ValidationResponse{
+		Consent: &SimplifiedConsent{
+			Actors:    []Identifier{"urn:oid:2.16.840.1.113883.2.4.6.1:00000007"},
+			Custodian: Identifier("urn:oid:2.16.840.1.113883.2.4.6.1:00000000"),
 			Resources: []string{"Observation"},
-			Subject: generated.Identifier("urn:oid:2.16.840.1.113883.2.4.6.3:999999990"),
+			Subject:   Identifier("urn:oid:2.16.840.1.113883.2.4.6.3:999999990"),
 		},
 		Outcome: "valid",
 	}
+}
+
+func validationBackend() ApiWrapper {
+	client := pkg.DefaultValidationBackend{}
+	client.Configure()
+	return ApiWrapper{&client}
 }

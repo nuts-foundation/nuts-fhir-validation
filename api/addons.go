@@ -17,16 +17,11 @@
  *
  */
 
-package validation
+package api
 
-type ValidationClient interface {
-	// ValidateAgainstSchemaConsentAt validates the consent record at the given location (on disk)
-	ValidateAgainstSchemaConsentAt(source string) (bool, []string, error)
+import "encoding/json"
 
-	// ValidateAgainstSchema Validates the given consent record against the schema
-	ValidateAgainstSchema(json []byte) (bool, []string, error)
-}
-
-func NewValidationClient() ValidationClient {
-	return ValidationBackend()
+func (vr ValidationResponse) String() string {
+	bytes, _ := json.Marshal(vr)
+	return string(bytes)
 }

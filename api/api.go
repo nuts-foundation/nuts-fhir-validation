@@ -17,32 +17,37 @@
  *
  */
 
-package validation
+package api
 
 import (
 	"github.com/labstack/echo/v4"
-	"github.com/nuts-foundation/nuts-fhir-validation/pkg/generated"
+	"github.com/nuts-foundation/nuts-fhir-validation/pkg"
 	"github.com/sirupsen/logrus"
+	"gopkg.in/thedevsaddam/gojsonq.v2"
 	"io/ioutil"
 	"net/http"
 )
 
+type ApiWrapper struct {
+	Vb *pkg.DefaultValidationBackend
+}
+
 // Validate handles the Post /consent/validate REST call. It always returns a 200 code with an outcome.
 // If invalid then a list of errors will be included.
-func (ve *DefaultValidationBackend) Validate(ctx echo.Context) error {
+func (aw *ApiWrapper) Validate(ctx echo.Context) error {
 	buf, err := ioutil.ReadAll(ctx.Request().Body)
 	if err != nil {
 		logrus.Error(err.Error())
 		return err
 	}
 
-	valid, errors, err := ve.ValidateAgainstSchema(buf)
+	valid, errors, err := aw.Vb.ValidateAgainstSchema(buf)
 
 	if err != nil {
 		logrus.Error(err.Error())
-		return ctx.JSON(http.StatusOK, generated.ValidationResponse{
+		return ctx.JSON(http.StatusOK, ValidationResponse{
 			Outcome: "invalid",
-			ValidationErrors: []generated.ValidationError{
+			ValidationErrors: []ValidationError{
 				{
 					Type:    "syntax",
 					Message: err.Error(),
@@ -52,13 +57,13 @@ func (ve *DefaultValidationBackend) Validate(ctx echo.Context) error {
 	}
 
 	if !valid {
-		var validationErrors []generated.ValidationError
+		var validationErrors []ValidationError
 
 		for _, e := range errors {
-			validationErrors = append(validationErrors, generated.ValidationError{Message: e, Type: "constraint"})
+			validationErrors = append(validationErrors, ValidationError{Message: e, Type: "constraint"})
 		}
 
-		return ctx.JSON(http.StatusOK, generated.ValidationResponse{
+		return ctx.JSON(http.StatusOK, ValidationResponse{
 			Outcome: "invalid",
 			ValidationErrors: validationErrors,
 		})
@@ -67,9 +72,9 @@ func (ve *DefaultValidationBackend) Validate(ctx echo.Context) error {
 	simplifiedConsent, err := extractSimplifiedConsent(buf)
 	if err != nil {
 		logrus.Error(err.Error())
-		return ctx.JSON(http.StatusOK, generated.ValidationResponse{
+		return ctx.JSON(http.StatusOK, ValidationResponse{
 			Outcome: "invalid",
-			ValidationErrors: []generated.ValidationError{
+			ValidationErrors: []ValidationError{
 				{
 					Type:    "syntax",
 					Message: err.Error(),
@@ -78,9 +83,30 @@ func (ve *DefaultValidationBackend) Validate(ctx echo.Context) error {
 		})
 	}
 
-	return ctx.JSON(http.StatusOK, generated.ValidationResponse{
+	return ctx.JSON(http.StatusOK, ValidationResponse{
 		Outcome: "valid",
 		Consent: simplifiedConsent,
 	})
+}
 
+func extractSimplifiedConsent(bytes []byte) (*SimplifiedConsent, error) {
+	jsonqFromString := jsonqFromString(string(bytes))
+
+	as := pkg.ActorsFrom(jsonqFromString)
+	actors := make([]Identifier, len(as))
+	for i, a := range as {
+		actors[i] = Identifier(a)
+	}
+
+	return &SimplifiedConsent{
+		Subject:   Identifier(pkg.SubjectFrom(jsonqFromString)),
+		Custodian: Identifier(pkg.CustodianFrom(jsonqFromString)),
+		Actors:    actors,
+		Resources: pkg.ResourcesFrom(jsonqFromString),
+	}, nil
+}
+
+
+func jsonqFromString(source string) *gojsonq.JSONQ {
+	return gojsonq.New().JSONString(source)
 }
