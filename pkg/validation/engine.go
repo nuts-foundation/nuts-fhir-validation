@@ -22,10 +22,10 @@ package validation
 import (
 	"fmt"
 	"github.com/deepmap/oapi-codegen/pkg/runtime"
-	"github.com/golang/glog"
 	"github.com/nuts-foundation/nuts-fhir-validation/pkg/generated"
 	"github.com/nuts-foundation/nuts-fhir-validation/schema"
 	engine "github.com/nuts-foundation/nuts-go/pkg"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	"github.com/xeipuuv/gojsonschema"
@@ -72,7 +72,7 @@ func Cmd() *cobra.Command {
 		Args: cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			jsonqString := jsonqFromFile(args[0])
-			glog.Error(SubjectFrom(jsonqString))
+			logrus.Error(SubjectFrom(jsonqString))
 		},
 	})
 
@@ -83,7 +83,7 @@ func Cmd() *cobra.Command {
 		Args: cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			jsonqString := jsonqFromFile(args[0])
-			glog.Error(CustodianFrom(jsonqString))
+			logrus.Error(CustodianFrom(jsonqString))
 		},
 	})
 
@@ -94,7 +94,7 @@ func Cmd() *cobra.Command {
 		Args: cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			jsonqString := jsonqFromFile(args[0])
-			glog.Error(ActorsFrom(jsonqString))
+			logrus.Error(ActorsFrom(jsonqString))
 		},
 	})
 
@@ -105,7 +105,7 @@ func Cmd() *cobra.Command {
 		Args: cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			jsonqString := jsonqFromFile(args[0])
-			glog.Error(ResourcesFrom(jsonqString))
+			logrus.Error(ResourcesFrom(jsonqString))
 		},
 	})
 

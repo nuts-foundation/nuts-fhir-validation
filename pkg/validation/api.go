@@ -20,9 +20,9 @@
 package validation
 
 import (
-	"github.com/golang/glog"
 	"github.com/labstack/echo/v4"
 	"github.com/nuts-foundation/nuts-fhir-validation/pkg/generated"
+	"github.com/sirupsen/logrus"
 	"io/ioutil"
 	"net/http"
 )
@@ -32,14 +32,14 @@ import (
 func (ve *DefaultValidationBackend) Validate(ctx echo.Context) error {
 	buf, err := ioutil.ReadAll(ctx.Request().Body)
 	if err != nil {
-		glog.Error(err.Error())
+		logrus.Error(err.Error())
 		return err
 	}
 
 	valid, errors, err := ve.ValidateAgainstSchema(buf)
 
 	if err != nil {
-		glog.Error(err.Error())
+		logrus.Error(err.Error())
 		return ctx.JSON(http.StatusOK, generated.ValidationResponse{
 			Outcome: "invalid",
 			ValidationErrors: []generated.ValidationError{
@@ -66,7 +66,7 @@ func (ve *DefaultValidationBackend) Validate(ctx echo.Context) error {
 
 	simplifiedConsent, err := extractSimplifiedConsent(buf)
 	if err != nil {
-		glog.Error(err.Error())
+		logrus.Error(err.Error())
 		return ctx.JSON(http.StatusOK, generated.ValidationResponse{
 			Outcome: "invalid",
 			ValidationErrors: []generated.ValidationError{

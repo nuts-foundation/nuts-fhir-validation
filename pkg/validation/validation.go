@@ -21,8 +21,8 @@ package validation
 
 import (
 	"fmt"
-	"github.com/golang/glog"
 	"github.com/nuts-foundation/nuts-fhir-validation/pkg/generated"
+	"github.com/sirupsen/logrus"
 	"github.com/xeipuuv/gojsonschema"
 	"gopkg.in/thedevsaddam/gojsonq.v2"
 	"sync"
@@ -134,20 +134,20 @@ func (ve *DefaultValidationBackend) ValidateAgainstSchema(json []byte) (bool, []
 func (ve *DefaultValidationBackend) validateAgainstSchema(loader gojsonschema.JSONLoader) (bool, []string, error) {
 	result, err := gojsonschema.Validate(ve.schemaLoader, loader)
 	if err != nil {
-		glog.Error(fmt.Sprintf("The document failed to validate : %s", err.Error()))
+		logrus.Error(fmt.Sprintf("The document failed to validate : %s", err.Error()))
 		return false, nil, err
 	}
 
 	var errors []string
 
 	if result.Valid() {
-		glog.Info("The document is valid")
+		logrus.Info("The document is valid")
 		return true, nil, nil
 	} else {
-		glog.Info("The document is invalid. see errors")
+		logrus.Info("The document is invalid. see errors")
 		for _, desc := range result.Errors() {
 			errors = append(errors, desc.String())
-			glog.Info(fmt.Sprintf("- %s", desc))
+			logrus.Info(fmt.Sprintf("- %s", desc))
 		}
 	}
 	return false, errors, nil

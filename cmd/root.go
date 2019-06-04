@@ -20,19 +20,14 @@
 package cmd
 
 import (
-	"flag"
 	"github.com/nuts-foundation/nuts-fhir-validation/pkg/validation"
 	cfg "github.com/nuts-foundation/nuts-go/pkg"
-	"github.com/spf13/pflag"
 )
 
 var e = validation.NewValidationEngine()
 var rootCmd = e.Cmd
 
 func Execute() {
-	// temp needed for glog
-	pflag.CommandLine.AddGoFlagSet(flag.CommandLine)
-
 	c := cfg.NewNutsGlobalConfig()
 	c.IgnoredPrefixes = append(c.IgnoredPrefixes, e.ConfigKey)
 	c.RegisterFlags(e)
