@@ -28,6 +28,7 @@ import (
 	"net/http"
 )
 
+// ApiWrapper wraps the Validator
 type ApiWrapper struct {
 	Vb *pkg.Validator
 }
@@ -64,7 +65,7 @@ func (aw *ApiWrapper) Validate(ctx echo.Context) error {
 		}
 
 		return ctx.JSON(http.StatusOK, ValidationResponse{
-			Outcome: "invalid",
+			Outcome:          "invalid",
 			ValidationErrors: validationErrors,
 		})
 	}
@@ -105,7 +106,6 @@ func extractSimplifiedConsent(bytes []byte) (*SimplifiedConsent, error) {
 		Resources: pkg.ResourcesFrom(jsonqFromString),
 	}, nil
 }
-
 
 func jsonqFromString(source string) *gojsonq.JSONQ {
 	return gojsonq.New().JSONString(source)

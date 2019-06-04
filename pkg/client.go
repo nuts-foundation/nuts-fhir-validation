@@ -19,6 +19,7 @@
 
 package pkg
 
+// ValidatorClient is the main interface for the Validator
 type ValidatorClient interface {
 	// ValidateAgainstSchemaConsentAt validates the consent record at the given location (on disk)
 	ValidateAgainstSchemaConsentAt(source string) (bool, []string, error)
@@ -27,6 +28,7 @@ type ValidatorClient interface {
 	ValidateAgainstSchema(json []byte) (bool, []string, error)
 }
 
+// NewValidatorClient returns the default Validator client, either a Local- or RemoteClient
 func NewValidatorClient() ValidatorClient {
 	return ValidatorInstance()
 }

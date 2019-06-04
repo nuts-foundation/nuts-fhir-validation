@@ -35,20 +35,19 @@ func NewValidationEngine() *engine.Engine {
 	vb := pkg.ValidatorInstance()
 
 	return &engine.Engine{
-		Cmd:       Cmd(vb),
+		Cmd:       cmd(vb),
 		Configure: vb.Configure,
-		Config: &vb.Config,
+		Config:    &vb.Config,
 		ConfigKey: "fhir",
-		FlagSet:   FlagSet(),
-		Name: "Validation",
+		FlagSet:   flagSet(),
+		Name:      "Validation",
 		Routes: func(router runtime.EchoRouter) {
 			api.RegisterHandlers(router, &api.ApiWrapper{Vb: vb})
 		},
 	}
 }
 
-// Cmd gives the validate sub-command for validating json consent records
-func Cmd(vb *pkg.Validator) *cobra.Command {
+func cmd(vb *pkg.Validator) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "validate",
 		Short: "validation commands",
@@ -111,8 +110,7 @@ func Cmd(vb *pkg.Validator) *cobra.Command {
 	return cmd
 }
 
-// FlasSet returns all global configuration possibilities so they can be displayed through the help command
-func FlagSet() *pflag.FlagSet {
+func flagSet() *pflag.FlagSet {
 	flags := pflag.NewFlagSet("validate", pflag.ContinueOnError)
 
 	flags.String(pkg.ConfigSchemaPath, pkg.ConfigSchemaPathDefault, "location of json schema, default nested Asset")

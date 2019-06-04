@@ -32,9 +32,11 @@ const concatIdFormat = "%s:%s"
 
 // --schemapath config flag
 const ConfigSchemaPath = "schemapath"
+
 // default use Asset
 const ConfigSchemaPathDefault = ""
 
+// Validator holds the config and schemaLoader for the validator
 type Validator struct {
 	Config struct {
 		Schemapath string
@@ -42,11 +44,13 @@ type Validator struct {
 	schemaLoader gojsonschema.JSONLoader
 }
 
+// Identifier is a synonym for string
 type Identifier string
 
 var instance *Validator
 var oneBackend sync.Once
 
+// ValidatorInstance returns the singleton Validator
 func ValidatorInstance() *Validator {
 	oneBackend.Do(func() {
 		instance = &Validator{}
@@ -55,6 +59,7 @@ func ValidatorInstance() *Validator {
 	return instance
 }
 
+// ResourcesFrom extracts the consent resources from some fhir json
 func ResourcesFrom(jsonq *gojsonq.JSONQ) []string {
 	var resources []string
 	listOfClasses := jsonq.Copy().From("provision.provision").Pluck("class").([]interface{})
@@ -63,13 +68,14 @@ func ResourcesFrom(jsonq *gojsonq.JSONQ) []string {
 	for _, classList := range listOfClasses {
 		cls := classList.([]interface{})
 		for _, cl := range cls {
-			clMap := cl.(map[string]interface {})
+			clMap := cl.(map[string]interface{})
 			resources = append(resources, fmt.Sprintf("%s", clMap["code"]))
 		}
 	}
 	return resources
 }
 
+// ActorsFrom extracts the consent actors from some fhir json
 func ActorsFrom(jsonq *gojsonq.JSONQ) []Identifier {
 	var actors []Identifier
 	references := jsonq.Copy().From("provision.actor").Pluck("reference").([]interface{})

@@ -21,6 +21,7 @@ package api
 
 import "encoding/json"
 
+// String outputs in json
 func (vr ValidationResponse) String() string {
 	bytes, _ := json.Marshal(vr)
 	return string(bytes)

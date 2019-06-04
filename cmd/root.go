@@ -27,6 +27,7 @@ import (
 var e = engine.NewValidationEngine()
 var rootCmd = e.Cmd
 
+// Execute runs the engine command as standalone command.
 func Execute() {
 	c := cfg.NewNutsGlobalConfig()
 	c.IgnoredPrefixes = append(c.IgnoredPrefixes, e.ConfigKey)
