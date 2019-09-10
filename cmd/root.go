@@ -21,7 +21,7 @@ package cmd
 
 import (
 	"github.com/nuts-foundation/nuts-fhir-validation/engine"
-	cfg "github.com/nuts-foundation/nuts-go/pkg"
+	cfg "github.com/nuts-foundation/nuts-go-core"
 )
 
 var e = engine.NewValidationEngine()
@@ -31,8 +31,8 @@ var rootCmd = e.Cmd
 func Execute() {
 	c := cfg.NewNutsGlobalConfig()
 	c.IgnoredPrefixes = append(c.IgnoredPrefixes, e.ConfigKey)
-	c.RegisterFlags(e)
-	if err := c.Load(); err != nil {
+	c.RegisterFlags(rootCmd, e)
+	if err := c.Load(rootCmd); err != nil {
 		panic(err)
 	}
 

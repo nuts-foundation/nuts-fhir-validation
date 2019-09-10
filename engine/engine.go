@@ -23,7 +23,7 @@ import (
 	"github.com/deepmap/oapi-codegen/pkg/runtime"
 	"github.com/nuts-foundation/nuts-fhir-validation/api"
 	"github.com/nuts-foundation/nuts-fhir-validation/pkg"
-	engine "github.com/nuts-foundation/nuts-go/pkg"
+	engine "github.com/nuts-foundation/nuts-go-core"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"

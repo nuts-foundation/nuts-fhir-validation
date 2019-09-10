@@ -23,7 +23,7 @@ import (
 	"bytes"
 	"github.com/golang/mock/gomock"
 	"github.com/nuts-foundation/nuts-fhir-validation/pkg"
-	"github.com/nuts-foundation/nuts-go/mock"
+	"github.com/nuts-foundation/nuts-go-core/mock"
 	"io/ioutil"
 	"net/http"
 	"testing"
