@@ -26,6 +26,7 @@ import (
 	"github.com/xeipuuv/gojsonschema"
 	"gopkg.in/thedevsaddam/gojsonq.v2"
 	"sync"
+	"time"
 )
 
 const concatIdFormat = "%s:%s"
@@ -42,7 +43,7 @@ type Validator struct {
 		Schemapath string
 	}
 	schemaLoader gojsonschema.JSONLoader
-	configOnce sync.Once
+	configOnce   sync.Once
 }
 
 // Identifier is a synonym for string
@@ -87,6 +88,13 @@ func ActorsFrom(jsonq *gojsonq.JSONQ) []Identifier {
 		actors = append(actors, Identifier(fmt.Sprintf(concatIdFormat, idMap["system"], idMap["value"])))
 	}
 	return actors
+}
+
+func PeriodFrom(jsonq *gojsonq.JSONQ) []time.Time {
+	start, _ := time.Parse(time.RFC3339, jsonq.Copy().Find("provision.period.start").(string))
+	end, _ := time.Parse(time.RFC3339, jsonq.Copy().Find("provision.period.end").(string))
+
+	return []time.Time{start, end}
 }
 
 // SubjectFrom extracts the patient from a given Consent json jsonq source

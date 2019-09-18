@@ -20,8 +20,10 @@
 package pkg
 
 import (
+	"gopkg.in/thedevsaddam/gojsonq.v2"
 	"io/ioutil"
 	"testing"
+	"time"
 )
 
 func TestDefaultValidationBackend_ValidateAgainstSchema(t *testing.T) {
@@ -83,4 +85,18 @@ func validationBackend() Validator {
 	client := Validator{}
 	client.Configure()
 	return client
+}
+
+func TestPeriodFrom(t *testing.T) {
+	//"start": "2016-06-23T17:02:33+10:00",
+	//"end": "2016-06-23T17:32:33+10:00"
+	start := time.Date(2016, 6, 23, 17, 2, 33, 0, time.FixedZone("", 36000))
+	end := time.Date(2016, 6, 23, 17, 32, 33, 0, time.FixedZone("", 36000))
+	want := []time.Time{start, end}
+	bytes, _ := ioutil.ReadFile("../examples/observation_consent.json")
+	jsonq := gojsonq.New().JSONString(string(bytes))
+	got := PeriodFrom(jsonq)
+	if got[0].Minute() != 2 || got[1].Minute() != 32 {
+		t.Errorf("PeriodFrom() = %v, want %v", got, want)
+	}
 }
