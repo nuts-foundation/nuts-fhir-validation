@@ -1,7 +1,7 @@
-.. _nuts-fhir-validation-rules:
+.. _nuts-fhir-validation-requirements:
 
-Rules
-=====
+FHIR consent requirements
+=========================
 
 This page lists the rules for the fhir consent model.
 
