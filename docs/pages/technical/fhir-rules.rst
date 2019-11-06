@@ -45,7 +45,7 @@ In order for the Nuts components to use the consent records for validation, addi
 
 - :code:`patient` is required and refers to a patient.
 - :code:`dateTime` is required
-- :code:`performer` is required and refers to the user who created the trigger to create the consent record.
+- :code:`performer` is optional and refers to the user recording the consent.
 - :code:`organization` is required and refers to the custodian of the data (the organization).
 - :code:`source` is required and refers to the proof that has been given by the patient.
 - :code:`verification` is required and refers to the person that gave consent.
@@ -57,7 +57,7 @@ Each complex requirement is explained in sub sections.
 Patient
 .......
 
-:code:`patient` Reference is required and the :code:`identifier` field is present. :code:`display` Is optional.
+:code:`patient` Reference is required and the :code:`identifier` field is present. :code:`display` Is not allowed since no personal data is stored.
 The :code:`system` of the identifier must be a valid Nuts system. In the case of patients this must be **urn:oid:2.16.840.1.113883.2.4.6.3**.
 This will be extended in the future when the PGO case is added.
 
@@ -69,8 +69,7 @@ This will be extended in the future when the PGO case is added.
         "identifier": {
             "system": "urn:oid:2.16.840.1.113883.2.4.6.3",
             "value": "999999990"
-        },
-        "display": "P. Patient"
+        }
       }
     }
 
@@ -80,7 +79,7 @@ Performer
 :code:`performer` Refers to the user that initiated creation of the consent record.
 In the first stage this will be a **Practitioner**, where the **patient** or **relatedPerson** will follow in a later stage.
 In the case the user does not have a valid Nuts identifier but acts on behalf of an organization, an **organization** is referenced.
-If a valid identifier is not present, :code:`display` must be present in the reference and must list the initials and name of the user.
+:code:`display` must not be present in the reference.
 
 .. note::
 
@@ -100,8 +99,7 @@ If a valid identifier is not present, :code:`display` must be present in the ref
         "identifier": {
             "system": "urn:oid:2.16.840.1.113883.2.4.6.1",
             "value": "00000007"
-        },
-        "display": "P. Practitioner"
+        }
       }
     }
 
@@ -114,8 +112,7 @@ If a valid identifier is not present, :code:`display` must be present in the ref
         "identifier": {
             "system": "urn:oid:2.16.840.1.113883.2.4.6.1",
             "value": "00000000"
-        },
-        "display": "P. Practitioner"
+        }
       }]
     }
 
@@ -139,15 +136,17 @@ Organization
 Source
 ......
 
-The :code:`source` will always be an :code:`attachment`. The attachment must have a :code:`contentType` and must have :code:`data`.
+The :code:`source` will always be an :code:`sourceAttachment`. The attachment must have a :code:`contentType` and must have an :code:`url`.
 There are several valid contentTypes:
 
 - application/pdf
 - application/json+irma
 
-When the attachment is a pdf, it must be a scanned document with a wet autograph.
-When the attachment is of type **application/json+irma**, the data is the login contract of the *performer*.
-The title should reflect the type of consent given.
+When the source is a pdf, it must be a scanned document with a wet autograph.
+When the source is of type **application/json+irma**, the data is the login contract of the *performer*.
+The title should reflect the type of consent given. Since no personal data is stored, the source only refers to a proof.
+The :code:`url` must be accessible and must accept a Nuts identification method (eg: Irma signature in a JWT).
+The hash can proof the document has not been tempered with.
 
 .. code-block:: json
 
@@ -155,8 +154,9 @@ The title should reflect the type of consent given.
       "resourceType": "Consent",
       "sourceAttachment": {
         "contentType": "application/pdf",
-        "data": "dhklauHAELrlg78OLg==",
-        "title": "Toestemming delen gegevens met Huisarts"
+        "title": "Toestemming delen gegevens met Huisarts",
+        "url": "https://some.fhir.url/Document/1111-2222-33334444-5555-6666",
+        "hash": "04298DE0...AB=="
       }
     }
 
@@ -166,8 +166,8 @@ The title should reflect the type of consent given.
       "resourceType": "Consent",
       "sourceAttachment": {
         "contentType": "application/json+irma",
-        "data": "dhklauHAELrlg78O...Lg==",
-        "title": "Toestemming delen gegevens besproken met P. Practitioner"
+        "url": "https://some.url.domain/contracts/etc/file",
+        "title": "Toestemming delen gegevens besproken met behandelaar"
       }
     }
 
@@ -176,7 +176,6 @@ Verification
 
 :code:`verification.verified` should always be **true**, if **false**, the source should reflect this (eg. court order).
 :code:`verificationWith` should refer to either the patient or a relative of the patient.
-In case of a relative, only the :code:`display` field will be required.
 
 .. code-block:: json
 
@@ -189,8 +188,7 @@ In case of a relative, only the :code:`display` field will be required.
             "identifier": {
                 "system": "urn:oid:2.16.840.1.113883.2.4.6.3",
                 "value": "999999990"
-            },
-            "display": "P. Patient"
+            }
         }
       }]
     }
@@ -325,16 +323,14 @@ The example below grants access to observations for Practitioner with agb=000000
         "identifier": {
             "system": "urn:oid:2.16.840.1.113883.2.4.6.3",
             "value": "999999990"
-        },
-        "display": "P. Patient"
+        }
       },
       "performer": [{
         "type": "Organization",
         "identifier": {
             "system": "urn:oid:2.16.840.1.113883.2.4.6.1",
             "value": "00000000"
-        },
-        "display": "P. Practitioner"
+        }
       }],
       "organization": [{
         "identifier": {
@@ -345,8 +341,9 @@ The example below grants access to observations for Practitioner with agb=000000
       }],
       "sourceAttachment": {
         "contentType": "application/pdf",
-        "data": "dhklauHAELrlg78OLg==",
-        "title": "Toestemming delen gegevens met Huisarts"
+        "title": "Toestemming delen gegevens met Huisarts",
+        "url": "https://some.fhir.url/Document/1111-2222-33334444-5555-6666",
+        "hash": "04298DE0...AB=="
       },
       "verification": [{
         "verified": true,
@@ -355,8 +352,7 @@ The example below grants access to observations for Practitioner with agb=000000
             "identifier": {
                 "system": "urn:oid:2.16.840.1.113883.2.4.6.3",
                 "value": "999999990"
-            },
-            "display": "P. Patient"
+            }
         }
       }],
       "policyRule": {
@@ -382,8 +378,7 @@ The example below grants access to observations for Practitioner with agb=000000
               "identifier": {
                 "system": "urn:oid:2.16.840.1.113883.2.4.6.1",
                 "value": "00000007"
-              },
-              "display": "P. Practitioner"
+              }
             }
           }],
         "period": {
