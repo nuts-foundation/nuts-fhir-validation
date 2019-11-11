@@ -97,6 +97,10 @@ func PeriodFrom(jsonq *gojsonq.JSONQ) []time.Time {
 	return []time.Time{start, end}
 }
 
+func VersionFrom(jsonq *gojsonq.JSONQ) string {
+	return jsonq.Copy().Find("meta.versionId").(string)
+}
+
 // SubjectFrom extracts the patient from a given Consent json jsonq source
 func SubjectFrom(jsonq *gojsonq.JSONQ) string {
 	patientIdentifier := fmt.Sprintf(concatIdFormat,
