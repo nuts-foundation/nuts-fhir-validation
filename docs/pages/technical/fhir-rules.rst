@@ -43,6 +43,7 @@ Additional rules
 
 In order for the Nuts components to use the consent records for validation, additional properties are required:
 
+- :code:`meta` is required
 - :code:`patient` is required and refers to a patient.
 - :code:`dateTime` is required
 - :code:`performer` is optional and refers to the user recording the consent.
@@ -53,6 +54,14 @@ In order for the Nuts components to use the consent records for validation, addi
 - :code:`provision` is required and defines the extend of the consent.
 
 Each complex requirement is explained in sub sections.
+
+Meta
+....
+
+The :code:`meta` field is used to track changes to the consent and might indicate there are previous versions. Only the latest consent proof will be referenced form the active document.
+If a later proof constrains the active consent, eg: end it on a specific date. Then the latest proof will point to the document proving the consent has ended.
+The :code:`meta` field will then indicate that the current record has a :code:`versionId > 1`. Previous records will still contain the proof wht consent has been given in the past.
+The :code:`versionId` field starts at :code:`1` and is incremented with `1` for each update. The :code:`lastUpdated` field is also required and will indicate the last moment the record was updated.
 
 Patient
 .......
@@ -136,8 +145,8 @@ Organization
 Source
 ......
 
-The :code:`source` will always be an :code:`sourceAttachment`. The attachment must have a :code:`contentType` and must have an :code:`url`.
-There are several valid contentTypes:
+The :code:`source` will always be an :code:`sourceAttachment`. The source always points to the latest change in consent proof.
+The attachment can have a :code:`contentType` and must have an :code:`url`. There are several valid contentTypes:
 
 - application/pdf
 - application/json+irma
