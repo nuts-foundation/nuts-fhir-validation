@@ -146,7 +146,7 @@ Source
 ......
 
 The :code:`source` will always be an :code:`sourceAttachment`. The source always points to the latest change in consent proof.
-The attachment can have a :code:`contentType` and must have an :code:`url`. There are several valid contentTypes:
+The attachment can have a :code:`contentType` and can have an :code:`url`. There are several valid contentTypes:
 
 - application/pdf
 - application/json+irma
@@ -156,6 +156,7 @@ When the source is of type **application/json+irma**, the data is the login cont
 The title should reflect the type of consent given. Since no personal data is stored, the source only refers to a proof.
 The :code:`url` must be accessible and must accept a Nuts identification method (eg: Irma signature in a JWT).
 The hash can proof the document has not been tempered with.
+Initially the title will be the most important, when no online reference is available through an url, the title will be the reference clients/patients will use to contact the care organisation.
 
 .. code-block:: json
 
