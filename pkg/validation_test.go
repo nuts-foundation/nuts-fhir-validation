@@ -20,6 +20,7 @@
 package pkg
 
 import (
+	"github.com/stretchr/testify/assert"
 	"gopkg.in/thedevsaddam/gojsonq.v2"
 	"io/ioutil"
 	"testing"
@@ -99,4 +100,11 @@ func TestPeriodFrom(t *testing.T) {
 	if got[0].Minute() != 2 || got[1].Minute() != 32 {
 		t.Errorf("PeriodFrom() = %v, want %v", got, want)
 	}
+}
+
+func TestVersionFrom(t *testing.T) {
+	bytes, _ := ioutil.ReadFile("../examples/observation_consent.json")
+	jsonq := gojsonq.New().JSONString(string(bytes))
+
+	assert.Equal(t, "1", VersionFrom(jsonq))
 }
