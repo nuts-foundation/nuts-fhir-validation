@@ -88,6 +88,20 @@ func validationBackend() Validator {
 	return client
 }
 
+func TestResourcesFrom(t *testing.T) {
+	bytes, _ := ioutil.ReadFile("../examples/observation_consent.json")
+	jsonq := gojsonq.New().JSONString(string(bytes))
+	dataClasses := ResourcesFrom(jsonq)
+
+	t.Run("with namespace", func(t *testing.T) {
+		assert.Equal(t, "http://hl7.org/fhir/resource-types#Observation", dataClasses[0])
+	})
+
+	t.Run("with urn", func(t *testing.T) {
+		assert.Equal(t, "urn:oid:1.3.6.1.4.1.54851.1:MEDICAL", dataClasses[1])
+	})
+}
+
 func TestPeriodFrom(t *testing.T) {
 	//"start": "2016-06-23T17:02:33+10:00",
 	//"end": "2016-06-23T17:32:33+10:00"
