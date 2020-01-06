@@ -21,12 +21,15 @@ package api
 
 import (
 	"bytes"
-	"github.com/golang/mock/gomock"
-	"github.com/nuts-foundation/nuts-fhir-validation/pkg"
-	"github.com/nuts-foundation/nuts-go-core/mock"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"testing"
+
+	"github.com/golang/mock/gomock"
+	"github.com/nuts-foundation/nuts-fhir-validation/pkg"
+	core "github.com/nuts-foundation/nuts-go-core"
+	"github.com/nuts-foundation/nuts-go-core/mock"
 )
 
 func TestDefaultValidationBackend_Validate(t *testing.T) {
@@ -96,7 +99,7 @@ func validationResult() ValidationResponse {
 		Consent: &SimplifiedConsent{
 			Actors:    []Identifier{"urn:oid:2.16.840.1.113883.2.4.6.1:00000007"},
 			Custodian: Identifier("urn:oid:2.16.840.1.113883.2.4.6.1:00000000"),
-			Resources: []string{"http://hl7.org/fhir/resource-types#Observation","urn:oid:1.3.6.1.4.1.54851.1:MEDICAL"},
+			Resources: []string{"http://hl7.org/fhir/resource-types#Observation", fmt.Sprintf("%s:MEDICAL", core.NutsConsentClassesOID)},
 			Subject:   Identifier("urn:oid:2.16.840.1.113883.2.4.6.3:999999990"),
 		},
 		Outcome: "valid",

@@ -20,11 +20,14 @@
 package pkg
 
 import (
-	"github.com/stretchr/testify/assert"
-	"gopkg.in/thedevsaddam/gojsonq.v2"
+	"fmt"
 	"io/ioutil"
 	"testing"
 	"time"
+
+	core "github.com/nuts-foundation/nuts-go-core"
+	"github.com/stretchr/testify/assert"
+	"gopkg.in/thedevsaddam/gojsonq.v2"
 )
 
 func TestDefaultValidationBackend_ValidateAgainstSchema(t *testing.T) {
@@ -98,7 +101,7 @@ func TestResourcesFrom(t *testing.T) {
 	})
 
 	t.Run("with urn", func(t *testing.T) {
-		assert.Equal(t, "urn:oid:1.3.6.1.4.1.54851.1:MEDICAL", dataClasses[1])
+		assert.Equal(t, fmt.Sprintf("%s:MEDICAL", core.NutsConsentClassesOID), dataClasses[1])
 	})
 }
 
