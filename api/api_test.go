@@ -99,7 +99,7 @@ func validationResult() ValidationResponse {
 		Consent: &SimplifiedConsent{
 			Actors:    []Identifier{"urn:oid:2.16.840.1.113883.2.4.6.1:00000007"},
 			Custodian: Identifier("urn:oid:2.16.840.1.113883.2.4.6.1:00000000"),
-			Resources: []string{"http://hl7.org/fhir/resource-types#Observation", fmt.Sprintf("%s:MEDICAL", core.NutsConsentClassesOID)},
+			Resources: []string{"http://hl7.org/fhir/resource-types#Observation", fmt.Sprintf("urn:oid:%s:MEDICAL", core.NutsConsentClassesOID)},
 			Subject:   Identifier("urn:oid:2.16.840.1.113883.2.4.6.3:999999990"),
 		},
 		Outcome: "valid",

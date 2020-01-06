@@ -101,7 +101,7 @@ func TestResourcesFrom(t *testing.T) {
 	})
 
 	t.Run("with urn", func(t *testing.T) {
-		assert.Equal(t, fmt.Sprintf("%s:MEDICAL", core.NutsConsentClassesOID), dataClasses[1])
+		assert.Equal(t, fmt.Sprintf("urn:oid:%s:MEDICAL", core.NutsConsentClassesOID), dataClasses[1])
 	})
 }
 
