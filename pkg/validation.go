@@ -25,6 +25,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/xeipuuv/gojsonschema"
 	"gopkg.in/thedevsaddam/gojsonq.v2"
+	"strings"
 	"sync"
 	"time"
 )
@@ -61,9 +62,10 @@ func ValidatorInstance() *Validator {
 	return instance
 }
 
-// ResourcesFrom extracts the consent resources from some fhir json
-func ResourcesFrom(jsonq *gojsonq.JSONQ) []string {
-	var resources []string
+// DataClassesFrom extracts the consent provision classes from some fhir json, replaces ResourcesFrom
+// It combines the system and code field to a single string using the correct divider (: or #) based on the type of system
+func DataClassesFrom(jsonq *gojsonq.JSONQ) []string {
+	var dataClasses []string
 	listOfClasses := jsonq.Copy().From("provision.provision").Pluck("class").([]interface{})
 
 	// lists of lists
@@ -71,10 +73,22 @@ func ResourcesFrom(jsonq *gojsonq.JSONQ) []string {
 		cls := classList.([]interface{})
 		for _, cl := range cls {
 			clMap := cl.(map[string]interface{})
-			resources = append(resources, fmt.Sprintf("%s", clMap["code"]))
+			system := clMap["system"].(string)
+			divider := "#"
+
+			if strings.Index(system, "urn:oid") != -1 {
+				divider = ":"
+			}
+
+			dataClasses = append(dataClasses, fmt.Sprintf("%s%s%s", clMap["system"], divider, clMap["code"]))
 		}
 	}
-	return resources
+	return dataClasses
+}
+
+// ResourcesFrom extracts the consent resources from some fhir json, deprecated, replaced by DataClassesFrom
+func ResourcesFrom(jsonq *gojsonq.JSONQ) []string {
+	return DataClassesFrom(jsonq)
 }
 
 // ActorsFrom extracts the consent actors from some fhir json

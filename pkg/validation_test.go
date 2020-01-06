@@ -20,11 +20,14 @@
 package pkg
 
 import (
-	"github.com/stretchr/testify/assert"
-	"gopkg.in/thedevsaddam/gojsonq.v2"
+	"fmt"
 	"io/ioutil"
 	"testing"
 	"time"
+
+	core "github.com/nuts-foundation/nuts-go-core"
+	"github.com/stretchr/testify/assert"
+	"gopkg.in/thedevsaddam/gojsonq.v2"
 )
 
 func TestDefaultValidationBackend_ValidateAgainstSchema(t *testing.T) {
@@ -86,6 +89,20 @@ func validationBackend() Validator {
 	client := Validator{}
 	client.Configure()
 	return client
+}
+
+func TestResourcesFrom(t *testing.T) {
+	bytes, _ := ioutil.ReadFile("../examples/observation_consent.json")
+	jsonq := gojsonq.New().JSONString(string(bytes))
+	dataClasses := ResourcesFrom(jsonq)
+
+	t.Run("with namespace", func(t *testing.T) {
+		assert.Equal(t, "http://hl7.org/fhir/resource-types#Observation", dataClasses[0])
+	})
+
+	t.Run("with urn", func(t *testing.T) {
+		assert.Equal(t, fmt.Sprintf("urn:oid:%s:MEDICAL", core.NutsConsentClassesOID), dataClasses[1])
+	})
 }
 
 func TestPeriodFrom(t *testing.T) {
