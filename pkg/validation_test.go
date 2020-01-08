@@ -110,13 +110,23 @@ func TestPeriodFrom(t *testing.T) {
 	//"end": "2016-06-23T17:32:33+10:00"
 	start := time.Date(2016, 6, 23, 17, 2, 33, 0, time.FixedZone("", 36000))
 	end := time.Date(2016, 6, 23, 17, 32, 33, 0, time.FixedZone("", 36000))
-	want := []time.Time{start, end}
-	bytes, _ := ioutil.ReadFile("../examples/observation_consent.json")
-	jsonq := gojsonq.New().JSONString(string(bytes))
-	got := PeriodFrom(jsonq)
-	if got[0].Minute() != 2 || got[1].Minute() != 32 {
-		t.Errorf("PeriodFrom() = %v, want %v", got, want)
-	}
+
+	t.Run("with end", func(t *testing.T) {
+		bytes, _ := ioutil.ReadFile("../examples/observation_consent.json")
+		jsonq := gojsonq.New().JSONString(string(bytes))
+		got := PeriodFrom(jsonq)
+		assert.Equal(t, start, *got[0])
+		assert.Equal(t, end, *got[1])
+	})
+
+	t.Run("without end", func(t *testing.T) {
+		bytes, _ := ioutil.ReadFile("../examples/observation_consent_unl.json")
+		jsonq := gojsonq.New().JSONString(string(bytes))
+		got := PeriodFrom(jsonq)
+		assert.Equal(t, start, *got[0])
+		assert.Nil(t, got[1])
+	})
+
 }
 
 func TestVersionFrom(t *testing.T) {

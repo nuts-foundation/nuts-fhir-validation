@@ -21,13 +21,14 @@ package pkg
 
 import (
 	"fmt"
+	"strings"
+	"sync"
+	"time"
+
 	"github.com/nuts-foundation/nuts-fhir-validation/schema"
 	"github.com/sirupsen/logrus"
 	"github.com/xeipuuv/gojsonschema"
 	"gopkg.in/thedevsaddam/gojsonq.v2"
-	"strings"
-	"sync"
-	"time"
 )
 
 const concatIdFormat = "%s:%s"
@@ -104,11 +105,18 @@ func ActorsFrom(jsonq *gojsonq.JSONQ) []Identifier {
 	return actors
 }
 
-func PeriodFrom(jsonq *gojsonq.JSONQ) []time.Time {
+// PeriodFrom returns a tuple of time pointers (validFrom, validTo) extracted from FHIR where the validTo may be nil
+func PeriodFrom(jsonq *gojsonq.JSONQ) []*time.Time {
 	start, _ := time.Parse(time.RFC3339, jsonq.Copy().Find("provision.period.start").(string))
+
+	endPeriodJson := jsonq.Copy().Find("provision.period.end")
+	if endPeriodJson == nil {
+		return []*time.Time{&start, nil}
+	}
+
 	end, _ := time.Parse(time.RFC3339, jsonq.Copy().Find("provision.period.end").(string))
 
-	return []time.Time{start, end}
+	return []*time.Time{&start, &end}
 }
 
 func VersionFrom(jsonq *gojsonq.JSONQ) string {
