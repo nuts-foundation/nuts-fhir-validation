@@ -4,7 +4,7 @@ go 1.13
 
 require (
 	github.com/deepmap/oapi-codegen v1.3.0
-	github.com/getkin/kin-openapi v0.2.0
+	github.com/getkin/kin-openapi v0.3.0
 	github.com/golang/mock v1.3.1
 	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect
 	github.com/labstack/echo/v4 v4.1.11
