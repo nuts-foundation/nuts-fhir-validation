@@ -3,8 +3,8 @@ nuts-fhir-validation
 
 Go crypto lib for Nuts service space
 
-.. image:: https://travis-ci.org/nuts-foundation/nuts-fhir-validation.svg?branch=master
-    :target: https://travis-ci.org/nuts-foundation/nuts-fhir-validation
+.. image:: https://circleci.com/gh/nuts-foundation/nuts-fhir-validation.svg?style=svg
+    :target: https://circleci.com/gh/nuts-foundation/nuts-fhir-validation
     :alt: Build Status
 
 .. image:: https://readthedocs.org/projects/nuts-fhir-validation/badge/?version=latest
