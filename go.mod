@@ -7,8 +7,8 @@ require (
 	github.com/getkin/kin-openapi v0.3.0
 	github.com/golang/mock v1.4.3
 	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect
-	github.com/labstack/echo/v4 v4.1.11
-	github.com/nuts-foundation/nuts-go-core v0.0.0-20200130105519-4620adf455e9
+	github.com/labstack/echo/v4 v4.1.13
+	github.com/nuts-foundation/nuts-go-core v0.13.0
 	github.com/pelletier/go-toml v1.5.0 // indirect
 	github.com/sirupsen/logrus v1.5.0
 	github.com/spf13/cobra v0.0.7
