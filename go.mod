@@ -3,7 +3,7 @@ module github.com/nuts-foundation/nuts-fhir-validation
 go 1.13
 
 require (
-	github.com/deepmap/oapi-codegen v1.3.0
+	github.com/deepmap/oapi-codegen v1.3.6
 	github.com/getkin/kin-openapi v0.3.0
 	github.com/golang/mock v1.4.3
 	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect
