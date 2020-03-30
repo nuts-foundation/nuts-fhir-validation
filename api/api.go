@@ -20,12 +20,13 @@
 package api
 
 import (
+	"io/ioutil"
+	"net/http"
+
 	"github.com/labstack/echo/v4"
 	"github.com/nuts-foundation/nuts-fhir-validation/pkg"
 	"github.com/sirupsen/logrus"
-	"gopkg.in/thedevsaddam/gojsonq.v2"
-	"io/ioutil"
-	"net/http"
+	"github.com/thedevsaddam/gojsonq/v2"
 )
 
 // ApiWrapper wraps the Validator

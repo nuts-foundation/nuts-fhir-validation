@@ -27,7 +27,7 @@ import (
 
 	core "github.com/nuts-foundation/nuts-go-core"
 	"github.com/stretchr/testify/assert"
-	"gopkg.in/thedevsaddam/gojsonq.v2"
+	"github.com/thedevsaddam/gojsonq/v2"
 )
 
 func TestDefaultValidationBackend_ValidateAgainstSchema(t *testing.T) {

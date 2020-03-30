@@ -27,8 +27,8 @@ import (
 
 	"github.com/nuts-foundation/nuts-fhir-validation/schema"
 	"github.com/sirupsen/logrus"
+	"github.com/thedevsaddam/gojsonq/v2"
 	"github.com/xeipuuv/gojsonschema"
-	"gopkg.in/thedevsaddam/gojsonq.v2"
 )
 
 const concatIdFormat = "%s:%s"

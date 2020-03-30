@@ -27,7 +27,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
-	"gopkg.in/thedevsaddam/gojsonq.v2"
+	"github.com/thedevsaddam/gojsonq/v2"
 )
 
 // NewValidationEngine creates a new Engine configuration
