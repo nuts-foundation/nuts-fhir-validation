@@ -13,7 +13,7 @@ require (
 	github.com/nuts-foundation/nuts-go-core v0.0.0-20200130105519-4620adf455e9
 	github.com/pelletier/go-toml v1.5.0 // indirect
 	github.com/sirupsen/logrus v1.5.0
-	github.com/spf13/cobra v0.0.5
+	github.com/spf13/cobra v0.0.7
 	github.com/spf13/pflag v1.0.5
 	github.com/stretchr/testify v1.5.1
 	github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb // indirect
