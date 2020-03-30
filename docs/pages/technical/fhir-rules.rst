@@ -239,12 +239,9 @@ When **OPTIN** is chosen, :code:`provision` is required to have at least 1 recor
 Provision
 .........
 
-:code:`provision` holds the actual extend of the consent. It must at least have 1 :code:`actor`. For now this must identify the **Practitioner**.
-When the Nuts registry holds actual organization-practitioner relationships or when mandating becomes active, this can change to **Organization**.
-If multiple practitioners work at the the same organization, all practitioners are added as actor. The :code:`role` will always be **PRCP**.
-
+:code:`provision` holds the actual extend of the consent. It must at least have 1 :code:`actor`. For now this must identify the **Organization**.
+The :code:`role` will always be **PRCP**.
 :code:`period` is required and has an optional :code:`end`. :code:`dataPeriod` is optional, when given it will restrict the data period for which data can be retrieved.
-
 :code:`provision.provision` will hold all the specific resources that are covered by this consent. :code:`type` is required and will always be **permit**.
 :code:`action` is required and will allow for only **access**, **correct** or **disclose** (using *http://terminology.hl7.org/CodeSystem/consentaction*).
 :code:`action` will list all the fhir resources that can be accessed (using *http://hl7.org/fhir/resource-type*).
