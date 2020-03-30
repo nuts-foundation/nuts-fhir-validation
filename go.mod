@@ -7,7 +7,7 @@ require (
 	github.com/getkin/kin-openapi v0.3.0
 	github.com/golang/mock v1.4.3
 	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect
-	github.com/labstack/echo/v4 v4.1.13
+	github.com/labstack/echo/v4 v4.1.15
 	github.com/nuts-foundation/nuts-go-core v0.13.0
 	github.com/pelletier/go-toml v1.5.0 // indirect
 	github.com/sirupsen/logrus v1.5.0
