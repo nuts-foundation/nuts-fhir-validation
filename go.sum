@@ -31,6 +31,8 @@ github.com/getkin/kin-openapi v0.3.0 h1:xsQ4mA20YJDMgIHdHqMKZ66QUe6/hi+x6yLsTTz8
 github.com/getkin/kin-openapi v0.3.0/go.mod h1:W8dhxZgpE84ciM+VIItFqkmZ4eHtuomrdIHtASQIqi0=
 github.com/getkin/kin-openapi v0.3.1 h1:9mLtayAmieqUnNACL0HqHbxkTc+z1+15sxXpLoJOGEQ=
 github.com/getkin/kin-openapi v0.3.1/go.mod h1:W8dhxZgpE84ciM+VIItFqkmZ4eHtuomrdIHtASQIqi0=
+github.com/getkin/kin-openapi v0.5.1 h1:eTe5fqly4FQTjSSMLekYckymPJHEJ4unOvY8c2hSYr4=
+github.com/getkin/kin-openapi v0.5.1/go.mod h1:zZQMFkVgRHCdhgb6ihCTIo9dyDZFvX0k/xAKqw1FhPw=
 github.com/ghodss/yaml v1.0.0 h1:wQHKEahhL6wmXdzwWG11gIVCkOv05bNOh+Rxn0yngAk=
 github.com/ghodss/yaml v1.0.0/go.mod h1:4dBDuWmgqj2HViK6kFavaiC9ZROes6MMH2rRYeMEF04=
 github.com/go-chi/chi v4.0.2+incompatible/go.mod h1:eB3wogJHnLi3x/kFX2A+IbTBlXxmMeXJVKy9tTv1XzQ=
