@@ -81,7 +81,7 @@ func TestDefaultValidationBackend_Validate(t *testing.T) {
 func emptyValidationError() ValidationResponse {
 	return ValidationResponse{
 		Outcome: "invalid",
-		ValidationErrors: []ValidationError{
+		ValidationErrors: &[]ValidationError{
 			{
 				Type:    "constraint",
 				Message: "(root): Must validate one and only one schema (oneOf)",
