@@ -20,7 +20,6 @@
 package engine
 
 import (
-	"github.com/deepmap/oapi-codegen/pkg/runtime"
 	"github.com/nuts-foundation/nuts-fhir-validation/api"
 	"github.com/nuts-foundation/nuts-fhir-validation/pkg"
 	engine "github.com/nuts-foundation/nuts-go-core"
@@ -41,7 +40,7 @@ func NewValidationEngine() *engine.Engine {
 		ConfigKey: "fhir",
 		FlagSet:   flagSet(),
 		Name:      "Validation",
-		Routes: func(router runtime.EchoRouter) {
+		Routes: func(router engine.EchoRouter) {
 			api.RegisterHandlers(router, &api.ApiWrapper{Vb: vb})
 		},
 	}

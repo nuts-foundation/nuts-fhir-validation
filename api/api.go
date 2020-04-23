@@ -49,7 +49,7 @@ func (aw *ApiWrapper) Validate(ctx echo.Context) error {
 		logrus.Error(err.Error())
 		return ctx.JSON(http.StatusOK, ValidationResponse{
 			Outcome: "invalid",
-			ValidationErrors: []ValidationError{
+			ValidationErrors: &[]ValidationError{
 				{
 					Type:    "syntax",
 					Message: err.Error(),
@@ -67,7 +67,7 @@ func (aw *ApiWrapper) Validate(ctx echo.Context) error {
 
 		return ctx.JSON(http.StatusOK, ValidationResponse{
 			Outcome:          "invalid",
-			ValidationErrors: validationErrors,
+			ValidationErrors: &validationErrors,
 		})
 	}
 
@@ -76,7 +76,7 @@ func (aw *ApiWrapper) Validate(ctx echo.Context) error {
 		logrus.Error(err.Error())
 		return ctx.JSON(http.StatusOK, ValidationResponse{
 			Outcome: "invalid",
-			ValidationErrors: []ValidationError{
+			ValidationErrors: &[]ValidationError{
 				{
 					Type:    "syntax",
 					Message: err.Error(),
