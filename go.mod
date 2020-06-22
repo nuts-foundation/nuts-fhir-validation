@@ -3,9 +3,11 @@ module github.com/nuts-foundation/nuts-fhir-validation
 go 1.13
 
 require (
+	github.com/deepmap/oapi-codegen v1.3.7 // indirect
 	github.com/golang/mock v1.4.3
+	github.com/json-iterator/go v1.1.9 // indirect
 	github.com/labstack/echo/v4 v4.1.16
-	github.com/nuts-foundation/nuts-go-core v0.13.1-0.20200422143012-856bc0bf2098
+	github.com/nuts-foundation/nuts-go-core v0.14.0
 	github.com/pelletier/go-toml v1.5.0 // indirect
 	github.com/sirupsen/logrus v1.6.0
 	github.com/spf13/cobra v0.0.7
