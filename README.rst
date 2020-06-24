@@ -14,8 +14,9 @@ Go crypto lib for Nuts service space
 .. image:: https://codecov.io/gh/nuts-foundation/nuts-fhir-validation/branch/master/graph/badge.svg
     :target: https://codecov.io/gh/nuts-foundation/nuts-fhir-validation
 
-.. image:: https://api.codacy.com/project/badge/Grade/3c71d0f3e7a042ebb02e2fd050fd7045
-    :target: https://www.codacy.com/app/woutslakhorst/nuts-fhir-validation
+.. image:: https://api.codeclimate.com/v1/badges/322f1769ebab2d78273c/maintainability
+   :target: https://codeclimate.com/github/nuts-foundation/nuts-fhir-validation/maintainability
+   :alt: Maintainability
 
 .. inclusion-marker-for-contribution
 
