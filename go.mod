@@ -6,7 +6,7 @@ require (
 	github.com/deepmap/oapi-codegen v1.3.7 // indirect
 	github.com/golang/mock v1.4.4
 	github.com/json-iterator/go v1.1.9 // indirect
-	github.com/labstack/echo/v4 v4.1.16
+	github.com/labstack/echo/v4 v4.1.17
 	github.com/nuts-foundation/nuts-go-core v0.14.0
 	github.com/pelletier/go-toml v1.5.0 // indirect
 	github.com/sirupsen/logrus v1.6.0
