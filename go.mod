@@ -4,7 +4,7 @@ go 1.13
 
 require (
 	github.com/golang/mock v1.4.4
-	github.com/labstack/echo/v4 v4.1.17
+	github.com/labstack/echo/v4 v4.2.0
 	github.com/nuts-foundation/nuts-go-core v0.16.0
 	github.com/pelletier/go-toml v1.5.0 // indirect
 	github.com/sirupsen/logrus v1.7.0
